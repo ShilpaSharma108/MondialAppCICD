@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.automation</groupId>
+    <artifactId>selenium-testng-framework</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>Selenium TestNG POM Framework</name>
+    <description>Automated Testing Framework with Selenium, TestNG and Page Object Model</description>
+
+    <properties>
+        <!-- Java Version -->
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <!-- Dependency Versions -->
+        <selenium.version>4.16.1</selenium.version>
+        <testng.version>7.8.0</testng.version>
+        <webdrivermanager.version>5.6.2</webdrivermanager.version>
+        <extentreports.version>5.1.1</extentreports.version>
+        <commons-io.version>2.15.1</commons-io.version>
+        
+        <!-- Plugin Versions -->
+        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
+        <maven-surefire-plugin.version>3.0.0</maven-surefire-plugin.version>
+        
+        <!-- Default Test Configuration -->
+        <browser>chrome</browser>
+        <os>windows</os>
+        <headless>false</headless>
+        <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
+
+        <!-- Test Credentials (override via -D flags or GitHub Secrets in CI) -->
+        <validUsername></validUsername>
+        <validPassword></validPassword>
+    </properties>
+
+    <dependencies>
+        <!-- Selenium Java -->
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>${selenium.version}</version>
+        </dependency>
+
+        <!-- TestNG -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>${testng.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        
+        <!-- Exclude JUnit to avoid conflicts -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- WebDriverManager - Auto driver management -->
+        <dependency>
+            <groupId>io.github.bonigarcia</groupId>
+            <artifactId>webdrivermanager</artifactId>
+            <version>${webdrivermanager.version}</version>
+        </dependency>
+
+        <!-- Extent Reports - HTML Reporting -->
+        <dependency>
+            <groupId>com.aventstack</groupId>
+            <artifactId>extentreports</artifactId>
+            <version>${extentreports.version}</version>
+        </dependency>
+
+        <!-- Apache Commons IO - File operations -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
+        </dependency>
+
+        <!-- SLF4J Simple - Logging (to suppress warnings) -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>2.0.9</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Maven Compiler Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <source>11</source>
+                    <target>11</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+
+            <!-- Maven Surefire Plugin - Test Execution -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <configuration>
+                    <suiteXmlFiles>
+                        <suiteXmlFile>${suiteXmlFile}</suiteXmlFile>
+                    </suiteXmlFiles>
+                    <systemPropertyVariables>
+                        <browser>${browser}</browser>
+                        <os>${os}</os>
+                        <headless>${headless}</headless>
+                        <validUsername>${validUsername}</validUsername>
+                        <validPassword>${validPassword}</validPassword>
+                    </systemPropertyVariables>
+                    <argLine>-Dfile.encoding=UTF-8</argLine>
+                    <testFailureIgnore>false</testFailureIgnore>
+                    <reportsDirectory>${project.build.directory}/test-output</reportsDirectory>
+                </configuration>
+            </plugin>
+        </plugins>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>true</filtering>
+            </testResource>
+        </testResources>
+    </build>
+
+    <profiles>
+        <!-- ========== BROWSER PROFILES ========== -->
+        
+        <!-- Chrome Browser Profile (Default) -->
+        <profile>
+            <id>chrome</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <browser>chrome</browser>
+                <suiteXmlFile>src/test/resources/testng-chrome.xml</suiteXmlFile>
+            </properties>
+        </profile>
+
+        <!-- Firefox Browser Profile -->
+        <profile>
+            <id>firefox</id>
+            <properties>
+                <browser>firefox</browser>
+                <suiteXmlFile>src/test/resources/testng-firefox.xml</suiteXmlFile>
+            </properties>
+        </profile>
+
+        <!-- Edge Browser Profile -->
+        <profile>
+            <id>edge</id>
+            <properties>
+                <browser>edge</browser>
+                <suiteXmlFile>src/test/resources/testng-edge.xml</suiteXmlFile>
+            </properties>
+        </profile>
+
+        <!-- ========== OS PROFILES ========== -->
+        
+        <!-- Windows OS Profile (Default) -->
+        <profile>
+            <id>windows</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <os>windows</os>
+            </properties>
+        </profile>
+
+        <!-- Ubuntu/Linux OS Profile -->
+        <profile>
+            <id>ubuntu</id>
+            <properties>
+                <os>ubuntu</os>
+            </properties>
+        </profile>
+
+        <!-- ========== EXECUTION MODE PROFILES ========== -->
+        
+        <!-- Headless Mode Profile -->
+        <profile>
+            <id>headless</id>
+            <properties>
+                <headless>true</headless>
+            </properties>
+        </profile>
+
+        <!-- ========== TEST SUITE PROFILES ========== -->
+        
+        <!-- Smoke Test Suite -->
+        <profile>
+            <id>smoke</id>
+            <properties>
+                <suiteXmlFile>src/test/resources/testng-smoke.xml</suiteXmlFile>
+            </properties>
+        </profile>
+
+        <!-- Regression Test Suite -->
+        <profile>
+            <id>regression</id>
+            <properties>
+                <suiteXmlFile>src/test/resources/testng-regression.xml</suiteXmlFile>
+            </properties>
+        </profile>
+
+        <!-- ========== COMBINED PROFILES ========== -->
+        
+        <!-- Chrome on Windows -->
+        <profile>
+            <id>chrome-windows</id>
+            <properties>
+                <browser>chrome</browser>
+                <os>windows</os>
+                <suiteXmlFile>src/test/resources/testng-chrome.xml</suiteXmlFile>
+            </properties>
+        </profile>
+
+        <!-- Firefox on Ubuntu -->
+        <profile>
+            <id>firefox-ubuntu</id>
+            <properties>
+                <browser>firefox</browser>
+                <os>ubuntu</os>
+                <suiteXmlFile>src/test/resources/testng-firefox.xml</suiteXmlFile>
+            </properties>
+        </profile>
+
+        <!-- Edge on Windows -->
+        <profile>
+            <id>edge-windows</id>
+            <properties>
+                <browser>edge</browser>
+                <os>windows</os>
+                <suiteXmlFile>src/test/resources/testng-edge.xml</suiteXmlFile>
+            </properties>
+        </profile>
+
+        <!-- Chrome Headless on Ubuntu (CI/CD) -->
+        <profile>
+            <id>ci</id>
+            <properties>
+                <browser>chrome</browser>
+                <os>ubuntu</os>
+                <headless>true</headless>
+                <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
+            </properties>
+        </profile>
+    </profiles>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>3.0.0</version>
+            </plugin>
+        </plugins>
+    </reporting>
+
+</project>

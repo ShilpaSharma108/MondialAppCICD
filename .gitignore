@@ -1,0 +1,120 @@
+# ===============================================
+# ESSENTIAL .gitignore for Selenium TestNG Framework
+# ===============================================
+
+# ===============================================
+# MAVEN BUILD FILES (Don't commit build output)
+# ===============================================
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+dependency-reduced-pom.xml
+
+# ===============================================
+# JAVA COMPILED FILES (Generated during build)
+# ===============================================
+*.class
+*.jar
+*.war
+*.ear
+
+# ===============================================
+# TEST OUTPUT & REPORTS (Generated after test runs)
+# ===============================================
+test-output/
+reports/
+screenshots/
+allure-results/
+surefire-reports/
+
+# ===============================================
+# LOGS (Don't commit log files)
+# ===============================================
+*.log
+logs/
+
+# ===============================================
+# ECLIPSE IDE FILES (IDE-specific, not needed in Git)
+# ===============================================
+.classpath
+.project
+.settings/
+.metadata/
+bin/
+.factorypath
+
+# ===============================================
+# INTELLIJ IDEA IDE FILES
+# ===============================================
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# ===============================================
+# VS CODE IDE FILES
+# ===============================================
+.vscode/
+*.code-workspace
+
+# ===============================================
+# OPERATING SYSTEM FILES
+# ===============================================
+
+# Windows
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Linux
+*~
+.directory
+
+# ===============================================
+# WEBDRIVER EXECUTABLES (WebDriverManager downloads these)
+# ===============================================
+drivers/
+chromedriver
+chromedriver.exe
+geckodriver
+geckodriver.exe
+msedgedriver
+msedgedriver.exe
+IEDriverServer.exe
+
+# ===============================================
+# BACKUP & TEMP FILES
+# ===============================================
+*.tmp
+*.bak
+*.swp
+*.old
+*~
+
+# ===============================================
+# SECURITY FILES (Never commit credentials)
+# ===============================================
+*.key
+*.pem
+credentials.properties
+secrets.properties
+.env
+
+# ===============================================
+# KEEP EMPTY FOLDERS (But ignore their contents)
+# ===============================================
+screenshots/*
+!screenshots/.gitkeep
+
+reports/*
+!reports/.gitkeep
+
+test-output/*
+!test-output/.gitkeep
