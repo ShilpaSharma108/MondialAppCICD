@@ -170,16 +170,14 @@ public class HomePage extends BasePage {
 	 * Click Accounting Adjustment Menu
 	 */
 	private void clickAccountingAdjustmentMenu() {
-		wait.until(ExpectedConditions.elementToBeClickable(accountingAdjustmentMenu));
-		accountingAdjustmentMenu.click();
+		clickElement(accountingAdjustmentMenu);
 	}
-	
+
 	/**
 	 * Click Management Menu
 	 */
 	private void clickManagementMenu() {
-		wait.until(ExpectedConditions.elementToBeClickable(managementMenu));
-		managementMenu.click();
+		clickElement(managementMenu);
 	}
 	
 	// ============================================
@@ -192,12 +190,10 @@ public class HomePage extends BasePage {
 	 * @param password - Password for the new user
 	 */
 	public void createUser(String emailId, String password) {
-		wait.until(ExpectedConditions.elementToBeClickable(enterpriseSetup));
-		enterpriseSetup.click();
-		wait.until(ExpectedConditions.elementToBeClickable(users));
-		users.click();
-		wait.until(ExpectedConditions.elementToBeClickable(addUserButton));
-		addUserButton.click();
+		waitForPageLoad();
+		clickElement(enterpriseSetup);
+		clickElement(users);
+		clickElement(addUserButton);
 		wait.until(ExpectedConditions.visibilityOf(newUserEmail));
 		newUserEmail.clear();
 		newUserEmail.sendKeys(emailId);
@@ -220,12 +216,10 @@ public class HomePage extends BasePage {
 	 * @param password - Password for the user
 	 */
 	public void createUserWithExistingEmail(String emailId, String password) {
-		wait.until(ExpectedConditions.elementToBeClickable(enterpriseSetup));
-		enterpriseSetup.click();
-		wait.until(ExpectedConditions.elementToBeClickable(users));
-		users.click();
-		wait.until(ExpectedConditions.visibilityOf(addUserButton));
-		addUserButton.click();
+		waitForPageLoad();
+		clickElement(enterpriseSetup);
+		clickElement(users);
+		clickElement(addUserButton);
 		wait.until(ExpectedConditions.visibilityOf(newUserEmail));
 		newUserEmail.clear();
 		newUserEmail.sendKeys(emailId);
@@ -263,10 +257,9 @@ public class HomePage extends BasePage {
 	 * @param userName - Username/Email of the user to delete
 	 */
 	public void deleteUser(String userName) {
-		wait.until(ExpectedConditions.elementToBeClickable(enterpriseSetup));
-		enterpriseSetup.click();
-		wait.until(ExpectedConditions.elementToBeClickable(users));
-		users.click();
+		waitForPageLoad();
+		clickElement(enterpriseSetup);
+		clickElement(users);
 		waitForPageLoad();
 		wait.until(ExpectedConditions.visibilityOfAllElements(usersTable));
 
@@ -371,32 +364,28 @@ public class HomePage extends BasePage {
 	 * Click Accept Terms of Service button
 	 */
 	public void clickAcceptTerms() {
-		wait.until(ExpectedConditions.elementToBeClickable(acceptTerms));
-		acceptTerms.click();
+		clickElement(acceptTerms);
 	}
-	
+
 	/**
 	 * Click Logout button
 	 */
 	public void clickLogout() {
-		wait.until(ExpectedConditions.elementToBeClickable(logOutBtn));
-		logOutBtn.click();
+		clickElement(logOutBtn);
 	}
-	
+
 	/**
 	 * Click Home button
 	 */
 	public void clickHome() {
-		wait.until(ExpectedConditions.elementToBeClickable(homeButton));
-		homeButton.click();
+		clickElement(homeButton);
 	}
-	
+
 	/**
 	 * Click Add Company button
 	 */
 	public void clickAddCompany() {
-		wait.until(ExpectedConditions.elementToBeClickable(addCompanyBtn));
-		addCompanyBtn.click();
+		clickElement(addCompanyBtn);
 	}
 	
 	// ============================================

@@ -60,6 +60,17 @@ public class BasePage {
         }
     }
 
+    protected void clickElement(WebElement element) {
+        try {
+            wait.until(ExpectedConditions.elementToBeClickable(element));
+            element.click();
+        } catch (Exception e) {
+            System.out.println("Regular click failed, using JavaScript click");
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);
+            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
+        }
+    }
+
     protected void waitForPageLoad() {
         try {
             new WebDriverWait(driver, Duration.ofSeconds(30)).until(
