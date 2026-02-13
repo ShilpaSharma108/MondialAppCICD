@@ -16,9 +16,45 @@
         </classes>
     </test>
 
-    <test name="Home Page Tests">
+    <test name="User Creation Tests">
         <classes>
-            <class name="com.mondial.tests.HomeTest"/>
+            <class name="com.mondial.tests.UserCreationTest"/>
+        </classes>
+    </test>
+
+    <test name="Zendesk Tests">
+        <classes>
+            <class name="com.mondial.tests.ZendeskTest"/>
+        </classes>
+    </test>
+
+    <test name="Natural Account Set CRUD Tests">
+        <classes>
+            <class name="com.mondial.tests.CR_NaturalAccCRUDTest"/>
+        </classes>
+    </test>
+
+    <test name="Reporting Segment CRUD Tests">
+        <classes>
+            <class name="com.mondial.tests.CR_SegmentCRUDTest"/>
+        </classes>
+    </test>
+
+    <test name="Segment Validation Tests">
+        <classes>
+            <class name="com.mondial.tests.CR_SegmentValidationTest"/>
+        </classes>
+    </test>
+
+    <test name="Segment CSV Template Tests">
+        <classes>
+            <class name="com.mondial.tests.CR_SegmentCSVTemplateTest"/>
+        </classes>
+    </test>
+
+    <test name="Segment Options CRUD Tests">
+        <classes>
+            <class name="com.mondial.tests.CR_SegmentOptionsAllTest"/>
         </classes>
     </test>
 

@@ -71,6 +71,16 @@ public class BasePage {
         }
     }
 
+    protected void scrollToElement(WebElement element) {
+        ((JavascriptExecutor) driver).executeScript(
+            "arguments[0].scrollIntoView({block: 'center', behavior: 'instant'});", element);
+        try {
+            Thread.sleep(300);
+        } catch (InterruptedException e) {
+            // ignore
+        }
+    }
+
     protected void waitForPageLoad() {
         try {
             new WebDriverWait(driver, Duration.ofSeconds(30)).until(

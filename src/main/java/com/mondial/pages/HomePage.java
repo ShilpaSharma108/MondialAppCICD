@@ -122,6 +122,7 @@ public class HomePage extends BasePage {
 		waitForPageLoad();
 		for (int i = 0; i < companiesTable.size(); i++) {
 			if (companiesTable.get(i).getAttribute("innerText").contains(companyName)) {
+				scrollToElement(companiesTable.get(i));
 				WebElement path = driver.findElement(By.xpath("//table[@class='table table-striped']//tr[contains(., '" + companyName + "')]//td//a[@data-original-title='New Draft Transaction']"));
 				wait.until(ExpectedConditions.elementToBeClickable(path));
 				path.click();
@@ -140,6 +141,7 @@ public class HomePage extends BasePage {
 		waitForPageLoad();
 		for (int i = 0; i < companiesTable.size(); i++) {
 			if (companiesTable.get(i).getAttribute("innerText").contains(companyName)) {
+				scrollToElement(companiesTable.get(i));
 				WebElement path = driver.findElement(By.xpath("//table[@class='table table-striped']//tr[contains(., '" + companyName + "')]//td//a[@data-original-title='Draft Transactions']"));
 				wait.until(ExpectedConditions.elementToBeClickable(path));
 				path.click();
@@ -158,6 +160,7 @@ public class HomePage extends BasePage {
 		waitForPageLoad();
 		for (int i = 0; i < companiesTable.size(); i++) {
 			if (companiesTable.get(i).getAttribute("innerText").contains(companyName)) {
+				scrollToElement(companiesTable.get(i));
 				WebElement path = companiesTable.get(i).findElement(By.xpath(".//td//a[@data-original-title='New Draft Transaction']"));
 				wait.until(ExpectedConditions.elementToBeClickable(path));
 				path.click();
@@ -388,6 +391,33 @@ public class HomePage extends BasePage {
 		clickElement(addCompanyBtn);
 	}
 	
+	// ============================================
+	// ZENDESK / HELP METHODS
+	// ============================================
+
+	/**
+	 * Click the Help (?) icon
+	 */
+	public void clickHelpIcon() {
+		clickElement(helpIcon);
+	}
+
+	/**
+	 * Wait for Submit Request link on Zendesk page
+	 */
+	public void waitForSubmitRequest() {
+		wait.until(ExpectedConditions.visibilityOf(submitRequest));
+	}
+
+	/**
+	 * Get the logged in user's display name
+	 * @return Logged in user name text
+	 */
+	public String getLoggedInUserName() {
+		wait.until(ExpectedConditions.visibilityOf(loggedInUser));
+		return loggedInUser.getAttribute("innerText");
+	}
+
 	// ============================================
 	// COMPATIBILITY METHODS (for framework)
 	// ============================================

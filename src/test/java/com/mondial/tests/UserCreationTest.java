@@ -7,14 +7,14 @@ import com.mondial.pages.HomePage;
 import com.mondial.pages.LoginPage;
 
 /**
- * Home Page Test Class
- * Tests home page functionality including user creation, navigation, and logout
- * 
+ * User Creation Test Class
+ * Tests user creation functionality including creation, duplicate validation, and deletion
+ *
  * Prerequisites:
  * - Valid admin credentials in config.properties (validUsername, validPassword)
  * - Test company name in config.properties (testCompanyName)
  */
-public class HomeTest extends BaseTest {
+public class UserCreationTest extends BaseTest {
     
     private String emailID;
     private String password;
