@@ -1,5 +1,8 @@
 package com.mondial.tests;
 
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import java.time.Duration;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -37,11 +40,8 @@ public class ZendeskTest extends BaseTest {
         System.out.println("Logging in with user: " + userName);
         loginPage.login(userName, password);
 
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        Assert.assertTrue(homePage.isCompanyHeadingDisplayed(),
+                         "Should be on home page after login");
 
         parentWindow = driver.getWindowHandle();
         System.out.println("=== Zendesk Test Setup Complete ===\n");
@@ -60,12 +60,9 @@ public class ZendeskTest extends BaseTest {
 
         homePage.clickHelpIcon();
 
-        // Wait for the new window to open
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        // Wait for a new window to open
+        new WebDriverWait(driver, Duration.ofSeconds(10)).until(
+                d -> d.getWindowHandles().size() > 1);
 
         // Switch to the new Zendesk window
         boolean switchedToNewWindow = false;
@@ -91,6 +88,10 @@ public class ZendeskTest extends BaseTest {
         driver.close();
         driver.switchTo().window(parentWindow);
 
+        // Wait for parent page to be ready after window switch
+        new WebDriverWait(driver, Duration.ofSeconds(10)).until(
+                d -> ((org.openqa.selenium.JavascriptExecutor) d).executeScript("return document.readyState").equals("complete"));
+
         System.out.println("[TEST 1] Switched back to parent window");
     }
 
@@ -100,6 +101,9 @@ public class ZendeskTest extends BaseTest {
     @Test(priority = 2, description = "Verify logged in username is displaying correctly", dependsOnMethods = {"testHelpIconNavigatesToZendesk"})
     public void testLoggedInUserNameDisplayed() {
         System.out.println("\n[TEST 2] Testing Logged In User Name Display...");
+
+        Assert.assertTrue(homePage.isCompanyHeadingDisplayed(),
+                         "Home page should be displayed after switching back from Zendesk");
 
         String displayedUserName = homePage.getLoggedInUserName();
         Assert.assertTrue(displayedUserName.contains(userName),

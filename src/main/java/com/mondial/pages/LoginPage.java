@@ -1,11 +1,15 @@
 package com.mondial.pages;
 
+import java.time.Duration;
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * Login Page Object Model
@@ -414,11 +418,20 @@ public class LoginPage extends BasePage {
      */
     public void waitForLoginPageLoad() {
         waitForPageLoad();
-        try {
-            wait.until(ExpectedConditions.visibilityOf(usernameField));
-        } catch (Exception e) {
-            System.out.println("Login page loaded (alternative verification)");
-        }
+        // Wait for email field to be visible (try both locators with extended timeout)
+        WebDriverWait loginWait = new WebDriverWait(driver, Duration.ofSeconds(30));
+        loginWait.until(d -> {
+            try {
+                List<WebElement> byId = d.findElements(By.id("email"));
+                if (byId.size() > 0 && byId.get(0).isDisplayed()) return true;
+            } catch (Exception e) { /* ignore */ }
+            try {
+                List<WebElement> byName = d.findElements(By.name("email"));
+                if (byName.size() > 0 && byName.get(0).isDisplayed()) return true;
+            } catch (Exception e) { /* ignore */ }
+            return false;
+        });
+        System.out.println("Login page loaded, URL: " + driver.getCurrentUrl());
     }
     
     /**

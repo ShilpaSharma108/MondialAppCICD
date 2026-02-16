@@ -47,7 +47,7 @@ public class HomePage extends BasePage {
 	@FindBy(xpath = "//i[@class='ti-help ']")
 	private WebElement helpIcon;
 	
-	@FindBy(xpath = "//ul[@class='nav navbar-nav']//li")
+	@FindBy(xpath = "//ul[contains(@class,'navbar-nav')]//li")
 	private WebElement loggedInUser;
 	
 	@FindBy(xpath = "//a[contains(.,'Submit a request')]")
@@ -262,29 +262,45 @@ public class HomePage extends BasePage {
 	public void deleteUser(String userName) {
 		waitForPageLoad();
 		clickElement(enterpriseSetup);
+		wait.until(ExpectedConditions.visibilityOf(users));
 		clickElement(users);
 		waitForPageLoad();
-		wait.until(ExpectedConditions.visibilityOfAllElements(usersTable));
-
-		for (int i = usersTable.size() - 1; i > 0; i--) {
-			if (usersTable.get(i).getAttribute("innerText").contains(userName.toLowerCase())) {
-				WebElement deleteBtn = driver.findElement(
-					By.xpath("//table[@class='table table-striped']//tr[contains(., '" +
-						userName.toLowerCase() + "')]//a[@data-method='delete']"));
-				wait.until(ExpectedConditions.elementToBeClickable(deleteBtn));
-				deleteBtn.click();
-
-				// Handle browser confirmation dialog if present
-				try {
-					driver.switchTo().alert().accept();
-				} catch (Exception e) {
-					System.out.println("No confirmation dialog present");
-				}
-
-				waitForPageLoad();
-				System.out.println("Deleted user: " + userName);
-				break;
+		// Wait until we're on the Users page
+		wait.until(d -> {
+			try {
+				return d.getCurrentUrl().contains("user");
+			} catch (Exception e) {
+				return false;
 			}
+		});
+
+		// Scroll to bottom to ensure all tables are loaded
+		((org.openqa.selenium.JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight);");
+		waitForPageLoad();
+
+		// Find the row containing the user across ALL tables
+		List<WebElement> matchingRows = driver.findElements(
+			By.xpath("//table[@class='table table-striped']//tr[contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '" + userName.toLowerCase() + "')]"));
+		System.out.println("Found " + matchingRows.size() + " row(s) matching '" + userName + "'");
+
+		if (matchingRows.size() > 0) {
+			WebElement row = matchingRows.get(0);
+			scrollToElement(row);
+			WebElement deleteBtn = row.findElement(By.xpath(".//a[@data-method='delete']"));
+			wait.until(ExpectedConditions.elementToBeClickable(deleteBtn));
+			deleteBtn.click();
+
+			try {
+				wait.until(ExpectedConditions.alertIsPresent());
+				driver.switchTo().alert().accept();
+			} catch (Exception e) {
+				System.out.println("No confirmation dialog present");
+			}
+
+			waitForPageLoad();
+			System.out.println("Deleted user: " + userName);
+		} else {
+			System.out.println("WARNING: User '" + userName + "' not found in users table");
 		}
 	}
 
@@ -294,13 +310,82 @@ public class HomePage extends BasePage {
 	 * @return true if user exists, false otherwise
 	 */
 	public boolean isUserPresent(String userName) {
-		wait.until(ExpectedConditions.visibilityOfAllElements(usersTable));
-		for (int i = usersTable.size() - 1; i > 0; i--) {
-			if (usersTable.get(i).getAttribute("innerText").contains(userName.toLowerCase())) {
-				return true;
+		// Scroll to bottom to ensure all tables are loaded
+		((org.openqa.selenium.JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight);");
+		waitForPageLoad();
+
+		List<WebElement> matchingRows = driver.findElements(
+			By.xpath("//table[@class='table table-striped']//tr[contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '" + userName.toLowerCase() + "')]"));
+		return matchingRows.size() > 0;
+	}
+
+	/**
+	 * Navigate to Users page and delete all users whose email starts with the given prefix
+	 * @param prefix - Email prefix to match (e.g., "testuser")
+	 * @return Number of users deleted
+	 */
+	public int deleteAllUsersWithPrefix(String prefix) {
+		waitForPageLoad();
+		clickElement(enterpriseSetup);
+		wait.until(ExpectedConditions.visibilityOf(users));
+		clickElement(users);
+		waitForPageLoad();
+		// Wait until we're no longer on the Companies page
+		wait.until(d -> {
+			try {
+				String url = d.getCurrentUrl();
+				return url.contains("user");
+			} catch (Exception e) {
+				return false;
+			}
+		});
+
+		System.out.println("Navigated to Users page: " + driver.getCurrentUrl());
+
+		// Scroll to bottom to ensure all tables are loaded
+		((org.openqa.selenium.JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight);");
+		waitForPageLoad();
+
+		int deletedCount = 0;
+		boolean found = true;
+
+		while (found) {
+			found = false;
+			// Find rows containing the prefix across ALL tables on the page
+			List<WebElement> matchingRows = driver.findElements(
+					By.xpath("//table[@class='table table-striped']//tr[contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '" + prefix.toLowerCase() + "')]"));
+			System.out.println("Found " + matchingRows.size() + " row(s) matching '" + prefix + "'");
+
+			if (matchingRows.size() > 0) {
+				WebElement row = matchingRows.get(0);
+				String rowText = row.getAttribute("innerText").trim();
+				System.out.println("Deleting user: " + rowText.substring(0, Math.min(80, rowText.length())));
+				scrollToElement(row);
+				WebElement deleteBtn = row.findElement(
+						By.xpath(".//a[@data-method='delete']"));
+				wait.until(ExpectedConditions.elementToBeClickable(deleteBtn));
+				deleteBtn.click();
+
+				try {
+					wait.until(ExpectedConditions.alertIsPresent());
+					driver.switchTo().alert().accept();
+				} catch (Exception e) {
+					System.out.println("No confirmation dialog present");
+				}
+
+				waitForPageLoad();
+				// Refresh to get updated table
+				driver.navigate().refresh();
+				waitForPageLoad();
+				// Scroll to bottom again after refresh
+				((org.openqa.selenium.JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight);");
+				waitForPageLoad();
+
+				deletedCount++;
+				found = true;
 			}
 		}
-		return false;
+		return deletedCount;
 	}
 	
 	// ============================================

@@ -22,6 +22,12 @@
         </classes>
     </test>
 
+    <test name="Cleanup Test Users">
+        <classes>
+            <class name="com.mondial.tests.CleanupTestUsersTest"/>
+        </classes>
+    </test>
+
     <test name="Zendesk Tests">
         <classes>
             <class name="com.mondial.tests.ZendeskTest"/>

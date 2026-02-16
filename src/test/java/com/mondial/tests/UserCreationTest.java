@@ -42,13 +42,6 @@ public class UserCreationTest extends BaseTest {
         // Login before running home page tests
         loginPage.login(username, password);
         
-        // Wait for login to complete
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        
         // Generate random email for user creation tests
         emailID = generateRandomEmail() + "@mailinator.com";
         System.out.println("Generated Email ID for testing: " + emailID);
@@ -79,28 +72,14 @@ public class UserCreationTest extends BaseTest {
         System.out.println("Creating user with email: " + emailID);
         
         homePage.createUser(emailID, password);
-        
-        // Wait for user creation
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        
-        Assert.assertTrue(homePage.isUserPresent(emailID), 
+
+        Assert.assertTrue(homePage.isUserPresent(emailID),
                          "New user should be created successfully");
-        
+
         System.out.println("[TEST 2] ✓ User created successfully: " + emailID);
-        
+
         // Navigate back to home
         homePage.clickHome();
-        
-        // Wait for navigation
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         
         System.out.println("[TEST 2] ✓ Navigated back to home page");
     }
@@ -116,13 +95,6 @@ public class UserCreationTest extends BaseTest {
         
         homePage.createUserWithExistingEmail(emailID, password);
         
-        // Wait for error message
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        
         Assert.assertTrue(homePage.isEmailAlreadyPresentErrorDisplayed(), 
                          "Error message should be displayed for duplicate email");
         
@@ -130,17 +102,10 @@ public class UserCreationTest extends BaseTest {
         
         // Logout after this test
         homePage.clickLogout();
-        
-        // Wait for logout
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        
+
         System.out.println("[TEST 3] ✓ Logged out successfully");
     }
-    
+
     /**
      * Test 4: Verify first login - Accept Terms of Service
      * Logs in with newly created user and accepts terms of service
@@ -149,30 +114,19 @@ public class UserCreationTest extends BaseTest {
     public void testAcceptTermsOfService() {
         System.out.println("\n[TEST 4] Testing First Login and Terms Acceptance...");
         System.out.println("Logging in with new user: " + emailID.toLowerCase());
-        
+
         LoginPage loginPage = new LoginPage(driver);
-        
+
+        // Wait for login page to fully load after logout
+        loginPage.waitForLoginPageLoad();
+
         loginPage.login(emailID.toLowerCase(), password);
-        
-        // Wait for login and terms page
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         
         // Check if Accept Terms button is displayed
         if (homePage.isAcceptTermsDisplayed()) {
             System.out.println("[TEST 4] Accept Terms of Service button found");
             homePage.clickAcceptTerms();
-            
-            // Wait for acceptance
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            
+
             String successMsg = homePage.getSuccessMessage();
             Assert.assertTrue(successMsg.contains("Thank you for accepting the Terms and Conditions") ||
                              successMsg.contains("success") ||
@@ -206,22 +160,14 @@ public class UserCreationTest extends BaseTest {
         LoginPage loginPage = new LoginPage(driver);
         if (!loginPage.isLoginPageDisplayed()) {
             homePage.clickLogout();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
+
+        // Wait for login page to fully load after logout
+        loginPage = new LoginPage(driver);
+        loginPage.waitForLoginPageLoad();
 
         // Login as admin
-        loginPage = new LoginPage(driver);
         loginPage.login(config.getProperty("validUsername"), config.getProperty("validPassword"));
-
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
         // Delete the user
         homePage.deleteUser(emailID);
