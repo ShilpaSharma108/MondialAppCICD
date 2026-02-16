@@ -1,6 +1,6 @@
-company_name
-Raiders of the Lost Ark LLC
-Globex Corporation
-Stark Industries
-Wayne Enterprises
-Umbrella Corp
+Company Name,First Name,Last Name,Unique Identifier,External Reference ID,Accounts
+Raiders of the Lost Ark LLC,Indiana,Jones,1981,1981,12000-00-000-000000
+Globex Corporation,Hank,Scorpio,1983,1983,12000-00-000-000001
+Stark Industries,Tony,Stark,1982,1982,12000-00-000-000002
+Wayne Enterprises,Bruce,Wayne,1984,1984,12000-00-000-000003
+Umbrella Corp,Albert,Wesker,1985,1985,12000-00-000-000004

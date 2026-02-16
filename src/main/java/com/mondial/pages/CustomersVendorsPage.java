@@ -157,23 +157,21 @@ public class CustomersVendorsPage extends BasePage {
 	 */
 	public void deleteAllRecords() {
 		waitForPageLoad();
-		for (int i = 0; i <= container.size(); i++) {
-			if (container.size() > i) {
+		while (container.size() > 0) {
+			try {
+				WebElement deleteBtn = driver.findElement(
+						By.xpath("//div[@row-id='0']//div[@col-id='delete']"));
+				((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].click();", deleteBtn);
+				try { Thread.sleep(1000); } catch (InterruptedException e) { /* ignore */ }
+				// Handle browser confirmation dialog
 				try {
-					WebElement deleteBtn = driver.findElement(
-							By.xpath("//div[@row-id='0']//div[@col-id='delete']"));
-					((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].click();", deleteBtn);
-					try { Thread.sleep(1000); } catch (InterruptedException e) { /* ignore */ }
-					// Handle browser confirmation dialog
-					try {
-						driver.switchTo().alert().accept();
-					} catch (Exception e) {
-						System.out.println("No confirmation dialog present");
-					}
-					waitForConfirmationMessageToDisappear();
+					driver.switchTo().alert().accept();
 				} catch (Exception e) {
-					break;
+					System.out.println("No confirmation dialog present");
 				}
+				waitForConfirmationMessageToDisappear();
+			} catch (Exception e) {
+				break;
 			}
 		}
 	}
@@ -189,6 +187,14 @@ public class CustomersVendorsPage extends BasePage {
 	 */
 	public boolean verifyRecordsUploaded() {
 		waitForPageLoad();
+		// Wait for AG Grid cells to render after upload
+		try {
+			wait.until(ExpectedConditions.presenceOfElementLocated(
+					By.xpath("//div[@role='gridcell'][@col-id='company_name']")));
+		} catch (Exception e) {
+			System.out.println("No grid cells found after waiting");
+			return false;
+		}
 		List<String> expectedRecords = new ArrayList<>(Arrays.asList("Raiders of the Lost Ark LLC"));
 		List<String> tableContent = new ArrayList<>();
 		List<WebElement> records = driver.findElements(
@@ -309,7 +315,7 @@ public class CustomersVendorsPage extends BasePage {
 	public void clickColumnHeader(String colId) {
 		waitForPageLoad();
 		WebElement header = driver.findElement(
-				By.xpath("//div[@class='ag-header-row']//div[@col-id='" + colId + "']"));
+				By.xpath("//div[contains(@class,'ag-header-row')]//div[@col-id='" + colId + "']"));
 		clickElement(header);
 		try { Thread.sleep(1000); } catch (InterruptedException e) { /* ignore */ }
 		waitForPageLoad();
@@ -373,14 +379,24 @@ public class CustomersVendorsPage extends BasePage {
 	public void openColumnFilter(String colId) {
 		waitForPageLoad();
 		WebElement header = driver.findElement(
-				By.xpath("//div[@class='ag-header-row']//div[@col-id='" + colId + "']"));
-		// Hover over header to reveal the filter icon
+				By.xpath("//div[contains(@class,'ag-header-row')]//div[@col-id='" + colId + "']"));
+		// Hover over header to reveal the menu icon
 		new Actions(driver).moveToElement(header).perform();
 		try { Thread.sleep(500); } catch (InterruptedException e) { /* ignore */ }
-		WebElement filterIcon = header.findElement(
-				By.xpath(".//span[contains(@class,'ag-header-icon') and contains(@class,'ag-header-cell-menu-button')]"));
-		clickElement(filterIcon);
-		try { Thread.sleep(500); } catch (InterruptedException e) { /* ignore */ }
+		WebElement menuIcon = header.findElement(
+				By.xpath(".//span[contains(@class,'ag-header-cell-menu-button')]"));
+		clickElement(menuIcon);
+		try { Thread.sleep(1000); } catch (InterruptedException e) { /* ignore */ }
+
+		// Click the Filter tab in the column menu if present
+		try {
+			WebElement filterTab = wait.until(ExpectedConditions.elementToBeClickable(
+					By.xpath("//span[contains(@class,'ag-tab')][.//span[contains(@class,'ag-icon-filter')]]")));
+			filterTab.click();
+			try { Thread.sleep(500); } catch (InterruptedException e) { /* ignore */ }
+		} catch (Exception e) {
+			System.out.println("Filter tab not found, filter input may be directly visible");
+		}
 	}
 
 	/**
@@ -388,9 +404,8 @@ public class CustomersVendorsPage extends BasePage {
 	 * @param text - Text to filter by
 	 */
 	public void enterFilterText(String text) {
-		WebElement filterInput = driver.findElement(
-				By.xpath("//div[contains(@class,'ag-filter')]//input[@type='text']"));
-		wait.until(ExpectedConditions.visibilityOf(filterInput));
+		WebElement filterInput = wait.until(ExpectedConditions.visibilityOfElementLocated(
+				By.xpath("//div[contains(@class,'ag-filter')]//input")));
 		filterInput.clear();
 		filterInput.sendKeys(text);
 		try { Thread.sleep(1000); } catch (InterruptedException e) { /* ignore */ }
@@ -403,9 +418,9 @@ public class CustomersVendorsPage extends BasePage {
 	public void clearFilter() {
 		try {
 			WebElement filterInput = driver.findElement(
-					By.xpath("//div[contains(@class,'ag-filter')]//input[@type='text']"));
-			filterInput.clear();
-			filterInput.sendKeys(Keys.BACK_SPACE);
+					By.xpath("//div[contains(@class,'ag-filter')]//input"));
+			filterInput.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+			filterInput.sendKeys(Keys.DELETE);
 			try { Thread.sleep(1000); } catch (InterruptedException e) { /* ignore */ }
 			waitForPageLoad();
 		} catch (Exception e) {
@@ -433,8 +448,10 @@ public class CustomersVendorsPage extends BasePage {
 	 */
 	public boolean isUploadErrorDisplayed() {
 		try {
-			wait.until(ExpectedConditions.visibilityOf(uploadErrorMsg));
-			return uploadErrorMsg.isDisplayed();
+			// Check for the Error log button which appears after a failed upload
+			WebElement errorLogBtn = wait.until(ExpectedConditions.visibilityOfElementLocated(
+					By.xpath("//button[contains(text(),'Error log')] | //a[contains(text(),'Error log')]")));
+			return errorLogBtn.isDisplayed();
 		} catch (Exception e) {
 			return false;
 		}
