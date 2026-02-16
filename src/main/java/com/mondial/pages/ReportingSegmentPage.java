@@ -102,7 +102,7 @@ public class ReportingSegmentPage extends BasePage {
 		wait.until(ExpectedConditions.visibilityOf(companyHeading));
 		// Scroll to bottom first as company may not be visible
 		((org.openqa.selenium.JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight);");
-		try { Thread.sleep(1000); } catch (InterruptedException e) { /* ignore */ }
+		waitForPageLoad();
 		for (int i = 0; i < tableName.size(); i++) {
 			if (tableName.get(i).getAttribute("innerText").contains(companyName)) {
 				scrollToElement(tableName.get(i));
@@ -110,21 +110,17 @@ public class ReportingSegmentPage extends BasePage {
 						"//table[@class='table table-striped']//tr[contains(., '"
 						+ companyName + "')]//td//a[@data-original-title='Reporting Segments']"));
 				clickElement(link);
-				// Wait for navigation to complete - heading changes from "Companies"
-				try { Thread.sleep(1000); } catch (InterruptedException e) { /* ignore */ }
-				waitForPageLoad();
-				wait.until(ExpectedConditions.visibilityOf(pageHeading));
-				// If still on Companies page, click again
-				if (pageHeading.getAttribute("innerText").contains("Companies")) {
+				// Wait for heading to change from "Companies" (up to 10s)
+				if (!waitForTextChange(pageHeading, "Companies", 10)) {
 					System.out.println("First click did not navigate, retrying...");
 					link = driver.findElement(By.xpath(
 							"//table[@class='table table-striped']//tr[contains(., '"
 							+ companyName + "')]//td//a[@data-original-title='Reporting Segments']"));
 					scrollToElement(link);
 					((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].click();", link);
-					try { Thread.sleep(1000); } catch (InterruptedException e) { /* ignore */ }
-					waitForPageLoad();
+					waitForTextChange(pageHeading, "Companies", 10);
 				}
+				waitForPageLoad();
 				return;
 			}
 		}
@@ -344,7 +340,7 @@ public class ReportingSegmentPage extends BasePage {
 		waitForPageLoad();
 		wait.until(ExpectedConditions.visibilityOf(companyHeading));
 		((org.openqa.selenium.JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight);");
-		try { Thread.sleep(1000); } catch (InterruptedException e) { /* ignore */ }
+		waitForPageLoad();
 		for (int i = 0; i < tableName.size(); i++) {
 			if (tableName.get(i).getAttribute("innerText").contains(companyName)) {
 				scrollToElement(tableName.get(i));
@@ -401,12 +397,12 @@ public class ReportingSegmentPage extends BasePage {
 						"//table[@class='table table-striped']//td//a[@data-original-title='Delete']"));
 				clickElement(deleteLink);
 				try {
+					wait.until(ExpectedConditions.alertIsPresent());
 					driver.switchTo().alert().accept();
 				} catch (Exception e) {
 					// No alert
 				}
 				waitForPageLoad();
-				try { Thread.sleep(1000); } catch (InterruptedException e) { /* ignore */ }
 				driver.navigate().refresh();
 				waitForPageLoad();
 			} catch (Exception e) {
@@ -517,7 +513,7 @@ public class ReportingSegmentPage extends BasePage {
 	public void uploadCSV() {
 		waitForPageLoad();
 		clickElement(downloadLink);
-		try { Thread.sleep(2000); } catch (InterruptedException e) { /* ignore */ }
+		waitForPageLoad();
 		WebElement inputBox = driver.findElement(By.xpath("//input[@id='upload_file']"));
 		inputBox.sendKeys(com.mondial.utils.DriverManager.getDownloadDir() + java.io.File.separator + "gl_account_segment_options_csv_upload_template.csv");
 		clickElement(uploadCSVBtn);
@@ -530,7 +526,7 @@ public class ReportingSegmentPage extends BasePage {
 	public void downloadTemplateCSV() {
 		waitForPageLoad();
 		clickElement(downloadLink);
-		try { Thread.sleep(2000); } catch (InterruptedException e) { /* ignore */ }
+		waitForPageLoad();
 	}
 
 	/**

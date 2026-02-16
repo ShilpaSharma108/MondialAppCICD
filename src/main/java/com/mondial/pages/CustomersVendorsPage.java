@@ -14,6 +14,8 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import java.time.Duration;
 
 /**
  * Customers/Vendors Page Object
@@ -77,7 +79,7 @@ public class CustomersVendorsPage extends BasePage {
 		waitForPageLoad();
 		wait.until(ExpectedConditions.visibilityOf(companyHeading));
 		((org.openqa.selenium.JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight);");
-		try { Thread.sleep(1000); } catch (InterruptedException e) { /* ignore */ }
+		waitForPageLoad();
 		for (int i = 0; i < tableName.size(); i++) {
 			if (tableName.get(i).getAttribute("innerText").contains(companyName)) {
 				scrollToElement(tableName.get(i));
@@ -85,20 +87,17 @@ public class CustomersVendorsPage extends BasePage {
 						"//table[@class='table table-striped']//tr[contains(., '"
 						+ companyName + "')]//td//a[@data-original-title='" + page + "']"));
 				clickElement(link);
-				try { Thread.sleep(1000); } catch (InterruptedException e) { /* ignore */ }
-				waitForPageLoad();
-				wait.until(ExpectedConditions.visibilityOf(pageHeading));
-				// If still on Companies page, click again
-				if (pageHeading.getAttribute("innerText").contains("Companies")) {
+				// Wait for heading to change from "Companies" (up to 10s)
+				if (!waitForTextChange(pageHeading, "Companies", 10)) {
 					System.out.println("First click did not navigate, retrying...");
 					link = driver.findElement(By.xpath(
 							"//table[@class='table table-striped']//tr[contains(., '"
 							+ companyName + "')]//td//a[@data-original-title='" + page + "']"));
 					scrollToElement(link);
 					((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].click();", link);
-					try { Thread.sleep(1000); } catch (InterruptedException e) { /* ignore */ }
-					waitForPageLoad();
+					waitForTextChange(pageHeading, "Companies", 10);
 				}
+				waitForPageLoad();
 				return;
 			}
 		}
@@ -115,7 +114,7 @@ public class CustomersVendorsPage extends BasePage {
 	public void downloadTemplateCSV() {
 		waitForPageLoad();
 		clickElement(downloadLink);
-		try { Thread.sleep(2000); } catch (InterruptedException e) { /* ignore */ }
+		waitForPageLoad();
 	}
 
 	/**
@@ -159,17 +158,26 @@ public class CustomersVendorsPage extends BasePage {
 		waitForPageLoad();
 		while (container.size() > 0) {
 			try {
+				int countBefore = container.size();
 				WebElement deleteBtn = driver.findElement(
 						By.xpath("//div[@row-id='0']//div[@col-id='delete']"));
 				((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].click();", deleteBtn);
-				try { Thread.sleep(1000); } catch (InterruptedException e) { /* ignore */ }
-				// Handle browser confirmation dialog
+				// Wait for browser confirmation dialog (cannot use waitForPageLoad while alert is open)
 				try {
+					new WebDriverWait(driver, Duration.ofSeconds(3)).until(ExpectedConditions.alertIsPresent());
 					driver.switchTo().alert().accept();
 				} catch (Exception e) {
 					System.out.println("No confirmation dialog present");
 				}
+				// Wait for success message to appear (confirms server processed the delete)
+				try {
+					wait.until(ExpectedConditions.visibilityOf(confirmationMsg));
+				} catch (Exception e) {
+					// Message may have appeared and disappeared quickly
+				}
+				// Wait for success message to disappear before next delete
 				waitForConfirmationMessageToDisappear();
+				waitForPageLoad();
 			} catch (Exception e) {
 				break;
 			}
@@ -317,7 +325,6 @@ public class CustomersVendorsPage extends BasePage {
 		WebElement header = driver.findElement(
 				By.xpath("//div[contains(@class,'ag-header-row')]//div[@col-id='" + colId + "']"));
 		clickElement(header);
-		try { Thread.sleep(1000); } catch (InterruptedException e) { /* ignore */ }
 		waitForPageLoad();
 	}
 
@@ -382,18 +389,15 @@ public class CustomersVendorsPage extends BasePage {
 				By.xpath("//div[contains(@class,'ag-header-row')]//div[@col-id='" + colId + "']"));
 		// Hover over header to reveal the menu icon
 		new Actions(driver).moveToElement(header).perform();
-		try { Thread.sleep(500); } catch (InterruptedException e) { /* ignore */ }
-		WebElement menuIcon = header.findElement(
-				By.xpath(".//span[contains(@class,'ag-header-cell-menu-button')]"));
+		WebElement menuIcon = wait.until(ExpectedConditions.visibilityOf(
+				header.findElement(By.xpath(".//span[contains(@class,'ag-header-cell-menu-button')]"))));
 		clickElement(menuIcon);
-		try { Thread.sleep(1000); } catch (InterruptedException e) { /* ignore */ }
 
 		// Click the Filter tab in the column menu if present
 		try {
 			WebElement filterTab = wait.until(ExpectedConditions.elementToBeClickable(
 					By.xpath("//span[contains(@class,'ag-tab')][.//span[contains(@class,'ag-icon-filter')]]")));
 			filterTab.click();
-			try { Thread.sleep(500); } catch (InterruptedException e) { /* ignore */ }
 		} catch (Exception e) {
 			System.out.println("Filter tab not found, filter input may be directly visible");
 		}
@@ -408,7 +412,6 @@ public class CustomersVendorsPage extends BasePage {
 				By.xpath("//div[contains(@class,'ag-filter')]//input")));
 		filterInput.clear();
 		filterInput.sendKeys(text);
-		try { Thread.sleep(1000); } catch (InterruptedException e) { /* ignore */ }
 		waitForPageLoad();
 	}
 
@@ -421,7 +424,6 @@ public class CustomersVendorsPage extends BasePage {
 					By.xpath("//div[contains(@class,'ag-filter')]//input"));
 			filterInput.sendKeys(Keys.chord(Keys.CONTROL, "a"));
 			filterInput.sendKeys(Keys.DELETE);
-			try { Thread.sleep(1000); } catch (InterruptedException e) { /* ignore */ }
 			waitForPageLoad();
 		} catch (Exception e) {
 			// Filter may have already been cleared

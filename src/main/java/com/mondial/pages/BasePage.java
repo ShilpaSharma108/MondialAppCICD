@@ -90,4 +90,28 @@ public class BasePage {
             System.out.println("Page load wait timed out");
         }
     }
+
+    /**
+     * Wait until an element's innerText no longer contains the specified text.
+     * Useful for waiting after navigation when heading should change.
+     * @param element - WebElement to monitor
+     * @param unwantedText - Text that should no longer be present
+     * @param timeoutSeconds - Maximum seconds to wait
+     * @return true if text changed within timeout, false otherwise
+     */
+    protected boolean waitForTextChange(WebElement element, String unwantedText, int timeoutSeconds) {
+        try {
+            new WebDriverWait(driver, Duration.ofSeconds(timeoutSeconds)).until(d -> {
+                try {
+                    String text = element.getAttribute("innerText");
+                    return text != null && !text.contains(unwantedText);
+                } catch (Exception e) {
+                    return false;
+                }
+            });
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

@@ -58,6 +58,18 @@
         </classes>
     </test>
 
+    <test name="Customers CSV Upload Tests">
+        <classes>
+            <class name="com.mondial.tests.CR_CustomersTest"/>
+        </classes>
+    </test>
+
+    <test name="Customers Grid Tests">
+        <classes>
+            <class name="com.mondial.tests.CR_CustomersGridTest"/>
+        </classes>
+    </test>
+
     <test name="Vendors CSV Upload Tests">
         <classes>
             <class name="com.mondial.tests.CR_VendorsTest"/>

@@ -11,7 +11,7 @@ import com.mondial.utils.DriverManager;
 /**
  * Customers CSV Upload/Download Test Class
  * Tests Download Template CSV, Upload CSV, Verify Records,
- * Download Table, and Delete Records for Customers page
+ * and Delete Records for Customers page
  *
  * Prerequisites:
  * - Valid admin credentials in config.properties (validUsername, validPassword)
@@ -28,11 +28,10 @@ public class CR_CustomersTest extends BaseTest {
     /**
      * Setup method that runs before all tests in this class
      * - Logs in with admin credentials
-     * - Navigates to Customers page for the test company
      */
     @BeforeClass
     public void uploadCustomersSetup() {
-        System.out.println("=== Starting Upload Customers Test Setup ===");
+        System.out.println("=== Starting Customers Test Setup ===");
 
         LoginPage loginPage = new LoginPage(driver);
         homePage = new HomePage(driver);
@@ -52,7 +51,7 @@ public class CR_CustomersTest extends BaseTest {
         }
 
         System.out.println("Test Company: " + companyName);
-        System.out.println("=== Upload Customers Test Setup Complete ===\n");
+        System.out.println("=== Customers Test Setup Complete ===\n");
     }
 
     /**
@@ -114,33 +113,17 @@ public class CR_CustomersTest extends BaseTest {
     }
 
     /**
-     * Test 4: Download Table as CSV and verify page stays on Customers
+     * Test 4: Delete all uploaded customer records and verify deletion
      */
-    @Test(priority = 4, dependsOnMethods = {"testVerifyRecordsAfterCSVUpload"}, description = "Download Table as CSV")
-    public void testDownloadTable() {
-        System.out.println("\n[TEST 4] Downloading Table as CSV...");
-
-        customersVendorsPage.clickDownloadTable();
-
-        String heading = customersVendorsPage.getPageHeading();
-        Assert.assertTrue(heading.contains(companyName + " - Customers"),
-                         "Should remain on Customers page after download");
-
-        System.out.println("[TEST 4] Table downloaded successfully");
-    }
-
-    /**
-     * Test 5: Delete all uploaded customer records and verify deletion
-     */
-    @Test(priority = 5, dependsOnMethods = {"testDownloadTable"}, description = "Delete uploaded customer records")
+    @Test(priority = 4, dependsOnMethods = {"testVerifyRecordsAfterCSVUpload"}, description = "Delete uploaded customer records")
     public void testDeleteUploadedRecords() {
-        System.out.println("\n[TEST 5] Deleting uploaded customer records...");
+        System.out.println("\n[TEST 4] Deleting uploaded customer records...");
 
         customersVendorsPage.deleteAllRecords();
 
         Assert.assertFalse(customersVendorsPage.hasRecords(),
                           "No records should be present after deletion");
 
-        System.out.println("[TEST 5] All customer records deleted successfully");
+        System.out.println("[TEST 4] All customer records deleted successfully");
     }
 }
