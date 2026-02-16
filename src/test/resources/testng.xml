@@ -40,21 +40,33 @@
         </classes>
     </test>
 
-    <test name="Segment Validation Tests">
+    <test name=" Reporting Segment Validation Tests">
         <classes>
             <class name="com.mondial.tests.CR_SegmentValidationTest"/>
         </classes>
     </test>
 
-    <test name="Segment CSV Template Tests">
+    <test name="Reporting Segment CSV Template Tests">
         <classes>
             <class name="com.mondial.tests.CR_SegmentCSVTemplateTest"/>
         </classes>
     </test>
 
-    <test name="Segment Options CRUD Tests">
+    <test name="Reporting Segment Options CRUD Tests">
         <classes>
             <class name="com.mondial.tests.CR_SegmentOptionsAllTest"/>
+        </classes>
+    </test>
+
+    <test name="Vendors CSV Upload Tests">
+        <classes>
+            <class name="com.mondial.tests.CR_VendorsTest"/>
+        </classes>
+    </test>
+
+    <test name="Vendors Grid Tests">
+        <classes>
+            <class name="com.mondial.tests.CR_VendorsGridTest"/>
         </classes>
     </test>
 

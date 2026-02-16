@@ -366,11 +366,14 @@ public class ReportingSegmentPage extends BasePage {
 	public void createReportingSegmentOptions(String segmentBaseName, String optionName, int numOfSegments) {
 		int num = 1;
 		for (int i = 0; i < numOfSegments; i++) {
+			if (!isAddGLSegmentBtnDisplayed()) {
+				System.out.println("Segment limit reached after creating " + (num - 1) + " segments. Stopping creation.");
+				break;
+			}
 			String segmentName = segmentBaseName + num;
 			createNewSegment(segmentName);
 			clickCreateButton();
 			waitForPageLoad();
-			isAddGLSegmentBtnDisplayed();
 			num++;
 		}
 		// Navigate to Options for the 2nd segment
@@ -516,7 +519,7 @@ public class ReportingSegmentPage extends BasePage {
 		clickElement(downloadLink);
 		try { Thread.sleep(2000); } catch (InterruptedException e) { /* ignore */ }
 		WebElement inputBox = driver.findElement(By.xpath("//input[@id='upload_file']"));
-		inputBox.sendKeys("C:\\Users\\Shilpa\\Downloads\\gl_account_segment_options_csv_upload_template.csv");
+		inputBox.sendKeys(com.mondial.utils.DriverManager.getDownloadDir() + java.io.File.separator + "gl_account_segment_options_csv_upload_template.csv");
 		clickElement(uploadCSVBtn);
 		waitForPageLoad();
 	}

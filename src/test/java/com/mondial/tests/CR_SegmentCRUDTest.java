@@ -6,6 +6,7 @@ import org.testng.annotations.Test;
 import com.mondial.pages.HomePage;
 import com.mondial.pages.LoginPage;
 import com.mondial.pages.ReportingSegmentPage;
+import com.mondial.utils.DriverManager;
 
 /**
  * Reporting Segment (GL Account Segment) CRUD Test Class
@@ -72,12 +73,12 @@ public class CR_SegmentCRUDTest extends BaseTest {
         Assert.assertTrue(heading.contains(companyName + " - GL Account Segments"),
                          "Heading should contain company name and GL Account Segments");
 
-        // Add button may not be present if segment limit is reached
-        if (reportingSegmentPage.isAddGLSegmentBtnDisplayed()) {
-            System.out.println("[TEST 1] Add GL Account Segment button is available");
-        } else {
-            System.out.println("[TEST 1] Segment limit reached - Add button not available");
-        }
+        // Delete existing segments if any before proceeding
+        System.out.println("[TEST 1] Checking for existing segments to clean up...");
+        reportingSegmentPage.deleteAllSegments();
+
+        Assert.assertTrue(reportingSegmentPage.isAddGLSegmentBtnDisplayed(),
+                         "Add GL Account Segment button should be available after cleanup");
 
         System.out.println("[TEST 1] Successfully navigated to Reporting Segments page");
     }
@@ -158,7 +159,7 @@ public class CR_SegmentCRUDTest extends BaseTest {
 
         reportingSegmentPage.clickDownloadTable();
 
-        String downloadedFilePath = "C:\\Users\\Shilpa\\Downloads\\gl_account_segments_automation_test_dnd.csv";
+        String downloadedFilePath = DriverManager.getDownloadDir() + java.io.File.separator + "gl_account_segments_automation_test_dnd.csv";
         Assert.assertTrue(reportingSegmentPage.isTemplateCSVDownloaded(downloadedFilePath),
                          "Table CSV file should be downloaded at: " + downloadedFilePath);
 

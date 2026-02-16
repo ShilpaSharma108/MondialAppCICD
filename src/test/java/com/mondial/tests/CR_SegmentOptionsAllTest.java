@@ -78,6 +78,10 @@ public class CR_SegmentOptionsAllTest extends BaseTest {
         Assert.assertTrue(heading.contains(companyName + " - GL Account Segments"),
                          "Heading should contain company name and GL Account Segments");
 
+        // Delete existing segments if any before proceeding
+        System.out.println("[TEST 1] Checking for existing segments to clean up...");
+        reportingSegmentPage.deleteAllSegments();
+
         reportingSegmentPage.createReportingSegmentOptions(reportingSegment, reportingSegmentOption, numOfSegments);
 
         Assert.assertTrue(reportingSegmentPage.verifySegmentExists(reportingSegmentOption),

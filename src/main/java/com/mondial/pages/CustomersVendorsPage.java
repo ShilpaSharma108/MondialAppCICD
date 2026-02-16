@@ -2,11 +2,15 @@ package com.mondial.pages;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -44,6 +48,15 @@ public class CustomersVendorsPage extends BasePage {
 
 	@FindBy(xpath = "//div[contains(text(),'was successfully deleted')]")
 	private WebElement confirmationMsg;
+
+	@FindBy(xpath = "//div[contains(text(),'Upload CSV process failed')]")
+	private WebElement uploadErrorMsg;
+
+	@FindBy(xpath = "//div[contains(text(),'was successfully updated')]")
+	private WebElement updateConfirmationMsg;
+
+	@FindBy(xpath = "//input[@type='submit']")
+	private WebElement submitBtn;
 
 	// Constructor
 	public CustomersVendorsPage(WebDriver driver) {
@@ -225,6 +238,214 @@ public class CustomersVendorsPage extends BasePage {
 	public void waitForConfirmationMessageToDisappear() {
 		try {
 			wait.until(ExpectedConditions.invisibilityOf(confirmationMsg));
+		} catch (Exception e) {
+			// Message may have already disappeared
+		}
+	}
+
+	// ============================================
+	// EDIT METHODS
+	// ============================================
+
+	/**
+	 * Click the edit link/button on a specific AG Grid row
+	 * @param rowIndex - Row index (0-based) in the AG Grid
+	 */
+	public void clickEditOnRow(int rowIndex) {
+		waitForPageLoad();
+		WebElement editBtn = driver.findElement(
+				By.xpath("//div[@row-id='" + rowIndex + "']//div[@col-id='edit']//a"));
+		scrollToElement(editBtn);
+		clickElement(editBtn);
+		waitForPageLoad();
+	}
+
+	/**
+	 * Edit the vendor company name in the edit form
+	 * @param newName - New company name to enter
+	 */
+	public void editVendorCompanyName(String newName) {
+		waitForPageLoad();
+		WebElement companyNameInput = driver.findElement(
+				By.xpath("//input[@id='vendor_company_name'] | //input[@id='customer_company_name']"));
+		wait.until(ExpectedConditions.visibilityOf(companyNameInput));
+		companyNameInput.clear();
+		companyNameInput.sendKeys(newName);
+	}
+
+	/**
+	 * Click the save/submit button on the edit form
+	 */
+	public void clickSaveEdit() {
+		clickElement(submitBtn);
+		waitForPageLoad();
+	}
+
+	/**
+	 * Verify if a vendor/customer with the given name exists in the AG Grid
+	 * @param name - Name to search for in company_name column
+	 * @return true if the name is found in the grid
+	 */
+	public boolean verifyVendorInGrid(String name) {
+		waitForPageLoad();
+		List<WebElement> cells = driver.findElements(
+				By.xpath("//div[@role='gridcell'][@col-id='company_name']"));
+		for (WebElement cell : cells) {
+			if (cell.getAttribute("innerText").trim().equals(name)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	// ============================================
+	// SORT METHODS
+	// ============================================
+
+	/**
+	 * Click an AG Grid column header to sort
+	 * @param colId - The col-id attribute of the column to sort
+	 */
+	public void clickColumnHeader(String colId) {
+		waitForPageLoad();
+		WebElement header = driver.findElement(
+				By.xpath("//div[@class='ag-header-row']//div[@col-id='" + colId + "']"));
+		clickElement(header);
+		try { Thread.sleep(1000); } catch (InterruptedException e) { /* ignore */ }
+		waitForPageLoad();
+	}
+
+	/**
+	 * Get all cell values for a specific column from the AG Grid
+	 * @param colId - The col-id attribute of the column
+	 * @return List of cell values as strings
+	 */
+	public List<String> getColumnValues(String colId) {
+		waitForPageLoad();
+		List<WebElement> cells = driver.findElements(
+				By.xpath("//div[@role='gridcell'][@col-id='" + colId + "']"));
+		List<String> values = new ArrayList<>();
+		for (WebElement cell : cells) {
+			String text = cell.getAttribute("innerText").trim();
+			if (!text.isEmpty()) {
+				values.add(text);
+			}
+		}
+		return values;
+	}
+
+	/**
+	 * Check if column values are sorted in ascending order
+	 * @param values - List of string values to check
+	 * @return true if sorted ascending (case-insensitive)
+	 */
+	public boolean isSortedAscending(List<String> values) {
+		List<String> sorted = values.stream()
+				.map(String::toLowerCase)
+				.collect(Collectors.toList());
+		List<String> expected = new ArrayList<>(sorted);
+		Collections.sort(expected);
+		return sorted.equals(expected);
+	}
+
+	/**
+	 * Check if column values are sorted in descending order
+	 * @param values - List of string values to check
+	 * @return true if sorted descending (case-insensitive)
+	 */
+	public boolean isSortedDescending(List<String> values) {
+		List<String> sorted = values.stream()
+				.map(String::toLowerCase)
+				.collect(Collectors.toList());
+		List<String> expected = new ArrayList<>(sorted);
+		Collections.sort(expected, Collections.reverseOrder());
+		return sorted.equals(expected);
+	}
+
+	// ============================================
+	// FILTER METHODS
+	// ============================================
+
+	/**
+	 * Open the AG Grid filter menu for a column by hovering over header and clicking filter icon
+	 * @param colId - The col-id attribute of the column
+	 */
+	public void openColumnFilter(String colId) {
+		waitForPageLoad();
+		WebElement header = driver.findElement(
+				By.xpath("//div[@class='ag-header-row']//div[@col-id='" + colId + "']"));
+		// Hover over header to reveal the filter icon
+		new Actions(driver).moveToElement(header).perform();
+		try { Thread.sleep(500); } catch (InterruptedException e) { /* ignore */ }
+		WebElement filterIcon = header.findElement(
+				By.xpath(".//span[contains(@class,'ag-header-icon') and contains(@class,'ag-header-cell-menu-button')]"));
+		clickElement(filterIcon);
+		try { Thread.sleep(500); } catch (InterruptedException e) { /* ignore */ }
+	}
+
+	/**
+	 * Enter text into the AG Grid filter input
+	 * @param text - Text to filter by
+	 */
+	public void enterFilterText(String text) {
+		WebElement filterInput = driver.findElement(
+				By.xpath("//div[contains(@class,'ag-filter')]//input[@type='text']"));
+		wait.until(ExpectedConditions.visibilityOf(filterInput));
+		filterInput.clear();
+		filterInput.sendKeys(text);
+		try { Thread.sleep(1000); } catch (InterruptedException e) { /* ignore */ }
+		waitForPageLoad();
+	}
+
+	/**
+	 * Clear the active AG Grid filter
+	 */
+	public void clearFilter() {
+		try {
+			WebElement filterInput = driver.findElement(
+					By.xpath("//div[contains(@class,'ag-filter')]//input[@type='text']"));
+			filterInput.clear();
+			filterInput.sendKeys(Keys.BACK_SPACE);
+			try { Thread.sleep(1000); } catch (InterruptedException e) { /* ignore */ }
+			waitForPageLoad();
+		} catch (Exception e) {
+			// Filter may have already been cleared
+			System.out.println("Filter already cleared or not present");
+		}
+	}
+
+	/**
+	 * Get the number of rows currently displayed in the AG Grid
+	 * @return Number of visible rows
+	 */
+	public int getRecordCount() {
+		waitForPageLoad();
+		return container.size();
+	}
+
+	// ============================================
+	// INVALID CSV UPLOAD METHODS
+	// ============================================
+
+	/**
+	 * Check if the upload error message is displayed
+	 * @return true if error message is displayed
+	 */
+	public boolean isUploadErrorDisplayed() {
+		try {
+			wait.until(ExpectedConditions.visibilityOf(uploadErrorMsg));
+			return uploadErrorMsg.isDisplayed();
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	/**
+	 * Wait for update confirmation message to disappear
+	 */
+	public void waitForUpdateConfirmationToDisappear() {
+		try {
+			wait.until(ExpectedConditions.invisibilityOf(updateConfirmationMsg));
 		} catch (Exception e) {
 			// Message may have already disappeared
 		}

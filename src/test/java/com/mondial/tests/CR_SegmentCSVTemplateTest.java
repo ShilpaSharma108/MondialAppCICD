@@ -6,6 +6,7 @@ import org.testng.annotations.Test;
 import com.mondial.pages.HomePage;
 import com.mondial.pages.LoginPage;
 import com.mondial.pages.ReportingSegmentPage;
+import com.mondial.utils.DriverManager;
 
 /**
  * GL Account Segment CSV Template Download and Upload Test Class
@@ -21,8 +22,8 @@ public class CR_SegmentCSVTemplateTest extends BaseTest {
     private HomePage homePage;
     private ReportingSegmentPage reportingSegmentPage;
     private String companyName;
-    private static final String TEMPLATE_CSV_PATH =
-            "C:\\Users\\Shilpa\\Downloads\\gl_account_segments_csv_upload_template.csv";
+    private final String TEMPLATE_CSV_PATH =
+            DriverManager.getDownloadDir() + java.io.File.separator + "gl_account_segments_csv_upload_template.csv";
 
     /**
      * Setup method that runs before all tests in this class
@@ -60,6 +61,10 @@ public class CR_SegmentCSVTemplateTest extends BaseTest {
         String heading = reportingSegmentPage.getPageHeading();
         Assert.assertTrue(heading.contains(companyName + " - GL Account Segments"),
                          "Heading should contain company name and GL Account Segments");
+
+        // Delete existing segments if any before proceeding
+        System.out.println("Checking for existing segments to clean up...");
+        reportingSegmentPage.deleteAllSegments();
 
         System.out.println("Navigated to GL Account Segments page");
         System.out.println("=== Segment CSV Template Test Setup Complete ===\n");

@@ -59,6 +59,10 @@ public class CR_SegmentValidationTest extends BaseTest {
         Assert.assertTrue(heading.contains(companyName + " - GL Account Segments"),
                          "Heading should contain company name and GL Account Segments");
 
+        // Delete existing segments if any before proceeding
+        System.out.println("Checking for existing segments to clean up...");
+        reportingSegmentPage.deleteAllSegments();
+
         System.out.println("Navigated to GL Account Segments page");
         System.out.println("=== Segment Validation Test Setup Complete ===\n");
     }

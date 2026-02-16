@@ -18,6 +18,7 @@ import java.util.Map;
 public class DriverManager {
     private static ThreadLocal<WebDriver> driver = new ThreadLocal<>();
     private static ConfigReader config = new ConfigReader();
+    private static final String DOWNLOAD_DIR = System.getProperty("user.home") + java.io.File.separator + "Downloads";
 
     public static WebDriver getDriver() {
         if (driver.get() == null) {
@@ -93,6 +94,9 @@ public class DriverManager {
         Map<String, Object> prefs = new HashMap<>();
         prefs.put("credentials_enable_service", false);
         prefs.put("profile.password_manager_enabled", false);
+        prefs.put("download.default_directory", DOWNLOAD_DIR);
+        prefs.put("download.prompt_for_download", false);
+        prefs.put("download.directory_upgrade", true);
         options.setExperimentalOption("prefs", prefs);
         
         // OS specific options
@@ -182,5 +186,14 @@ public class DriverManager {
 
     public static String getOSName() {
         return getOSFromSystemOrConfig();
+    }
+
+    /**
+     * Get the configured download directory path
+     * Works on both Windows and Linux (CI)
+     * @return Download directory path
+     */
+    public static String getDownloadDir() {
+        return DOWNLOAD_DIR;
     }
 }
