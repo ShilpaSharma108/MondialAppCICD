@@ -98,9 +98,12 @@ public class BasePage {
      */
     protected void dismissAlert() {
         try {
+            // Cover all common Bootstrap close button patterns:
+            // BS3/4: <button class="close">, <a class="close">, <button data-dismiss="alert">
+            // BS5: <button class="btn-close">, <button data-bs-dismiss="alert">
             WebElement closeBtn = new WebDriverWait(driver, Duration.ofSeconds(3)).until(
                 ExpectedConditions.elementToBeClickable(
-                    By.xpath("//div[contains(@class,'alert')]//button[@class='close'] | //div[contains(@class,'alert')]//button[@data-dismiss='alert']")));
+                    By.xpath("//div[contains(@class,'alert')]//*[contains(@class,'close') or @data-dismiss='alert' or @data-bs-dismiss='alert']")));
             closeBtn.click();
             new WebDriverWait(driver, Duration.ofSeconds(3)).until(
                 ExpectedConditions.invisibilityOfElementLocated(
