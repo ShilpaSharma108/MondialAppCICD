@@ -28,6 +28,12 @@
         </classes>
     </test>
 
+    <test name="Ledger CRUD Tests">
+        <classes>
+            <class name="com.mondial.tests.ES_LedgerCRUDTest"/>
+        </classes>
+    </test>
+
     <test name="Natural Account Set CRUD Tests">
         <classes>
             <class name="com.mondial.tests.CR_NaturalAccCRUDTest"/>
