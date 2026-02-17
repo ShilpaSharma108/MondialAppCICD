@@ -47,7 +47,7 @@ public class HomePage extends BasePage {
 	@FindBy(xpath = "//i[@class='ti-help ']")
 	private WebElement helpIcon;
 	
-	@FindBy(xpath = "//ul[contains(@class,'navbar-nav')]//li")
+	@FindBy(xpath = "//a[@data-original-title='Logout']/parent::li")
 	private WebElement loggedInUser;
 	
 	@FindBy(xpath = "//a[contains(.,'Submit a request')]")
