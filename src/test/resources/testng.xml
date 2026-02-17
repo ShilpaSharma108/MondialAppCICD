@@ -28,6 +28,18 @@
         </classes>
     </test>
 
+    <test name="Ledger Report Writer Integration Tests">
+        <classes>
+            <class name="com.mondial.tests.integrations.IntegrationLedger_ReportWriterTest"/>
+        </classes>
+    </test>
+
+    <test name="Ledger Templated Report Integration Tests">
+        <classes>
+            <class name="com.mondial.tests.integrations.IntegrationLedger_TemplatedReportTest"/>
+        </classes>
+    </test>
+
     <test name="Ledger CRUD Tests">
         <classes>
             <class name="com.mondial.tests.enterprise.ES_LedgerCRUDTest"/>
