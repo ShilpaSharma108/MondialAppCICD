@@ -169,6 +169,10 @@ public class UserCreationTest extends BaseTest {
         // Login as admin
         loginPage.login(config.getProperty("validUsername"), config.getProperty("validPassword"));
 
+        // Wait for home page to fully load after admin login
+        Assert.assertTrue(homePage.isCompanyHeadingDisplayed(),
+                         "Home page should load after admin login");
+
         // Delete the user
         homePage.deleteUser(emailID);
 

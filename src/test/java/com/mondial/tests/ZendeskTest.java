@@ -88,9 +88,15 @@ public class ZendeskTest extends BaseTest {
         driver.close();
         driver.switchTo().window(parentWindow);
 
-        // Wait for parent page to be ready after window switch
+        // Wait for parent page to be fully ready after window switch
         new WebDriverWait(driver, Duration.ofSeconds(10)).until(
                 d -> ((org.openqa.selenium.JavascriptExecutor) d).executeScript("return document.readyState").equals("complete"));
+
+        // Re-initialize page elements after window switch to avoid stale references
+        homePage = new HomePage(driver);
+
+        Assert.assertTrue(homePage.isCompanyHeadingDisplayed(),
+                         "Home page should be displayed after switching back from Zendesk");
 
         System.out.println("[TEST 1] Switched back to parent window");
     }
