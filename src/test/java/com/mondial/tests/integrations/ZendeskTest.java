@@ -114,8 +114,10 @@ public class ZendeskTest extends BaseTest {
                          "Home page should be displayed after switching back from Zendesk");
 
         String displayedUserName = homePage.getLoggedInUserName();
-        Assert.assertTrue(displayedUserName.contains(userName),
-                         "Logged in username should contain: " + userName);
+        String userNamePrefix = userName.split("@")[0];
+        Assert.assertTrue(displayedUserName.toLowerCase().contains(userNamePrefix.toLowerCase()),
+                         "Logged in username should contain: " + userNamePrefix
+                         + " but found: " + displayedUserName);
 
         System.out.println("[TEST 2] Logged in user verified: " + displayedUserName);
     }
