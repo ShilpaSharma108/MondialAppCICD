@@ -218,11 +218,7 @@ public class NaturalAccountSetPage extends BasePage {
 	 * Wait for confirmation message to disappear after delete
 	 */
 	public void waitForConfirmationMessageToDisappear() {
-		try {
-			wait.until(ExpectedConditions.invisibilityOf(confirmationMsg));
-		} catch (Exception e) {
-			// Message may have already disappeared
-		}
+		dismissAlert();
 	}
 
 	/**

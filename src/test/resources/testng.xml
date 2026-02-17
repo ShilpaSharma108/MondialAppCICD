@@ -34,7 +34,7 @@
         </classes>
     </test>
 
-    <test name="Ledger Templated Report Integration Tests">
+    <test name="Ledger Create Delete Integration Tests">
         <classes>
             <class name="com.mondial.tests.integrations.IntegrationLedger_TemplatedReportTest"/>
         </classes>

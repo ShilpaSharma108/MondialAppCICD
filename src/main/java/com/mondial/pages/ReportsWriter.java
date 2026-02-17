@@ -133,6 +133,8 @@ public class ReportsWriter extends BasePage {
 		wait.until(ExpectedConditions.visibilityOf(reportWriterMenu));
 		clickElement(reportWriterMenu);
 		wait.until(ExpectedConditions.visibilityOf(reportsMenu));
+		clickElement(reportsMenu);
+		wait.until(ExpectedConditions.visibilityOf(reportHeading));
 	}
 
 	/**

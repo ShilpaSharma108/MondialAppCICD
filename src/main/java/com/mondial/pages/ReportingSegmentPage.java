@@ -483,11 +483,7 @@ public class ReportingSegmentPage extends BasePage {
 	 * Wait for confirmation message to disappear after delete
 	 */
 	public void waitForConfirmationMessageToDisappear() {
-		try {
-			wait.until(ExpectedConditions.invisibilityOf(confirmationMsg));
-		} catch (Exception e) {
-			// Message may have already disappeared
-		}
+		dismissAlert();
 	}
 
 	/**
@@ -511,11 +507,33 @@ public class ReportingSegmentPage extends BasePage {
 	 * Download template CSV, upload it, and wait for completion
 	 */
 	public void uploadCSV() {
+		String csvPath = com.mondial.utils.DriverManager.getDownloadDir()
+				+ java.io.File.separator + "gl_account_segment_options_csv_upload_template.csv";
+
+		// Delete stale file from previous runs
+		java.io.File csvFile = new java.io.File(csvPath);
+		if (csvFile.exists()) {
+			csvFile.delete();
+		}
+
 		waitForPageLoad();
 		clickElement(downloadLink);
-		waitForPageLoad();
+
+		// Wait for download to complete
+		for (int i = 0; i < 15; i++) {
+			if (csvFile.exists()) {
+				break;
+			}
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+				break;
+			}
+		}
+
 		WebElement inputBox = driver.findElement(By.xpath("//input[@id='upload_file']"));
-		inputBox.sendKeys(com.mondial.utils.DriverManager.getDownloadDir() + java.io.File.separator + "gl_account_segment_options_csv_upload_template.csv");
+		inputBox.sendKeys(csvPath);
 		clickElement(uploadCSVBtn);
 		waitForPageLoad();
 	}
@@ -536,6 +554,18 @@ public class ReportingSegmentPage extends BasePage {
 	 */
 	public boolean isTemplateCSVDownloaded(String filePath) {
 		java.io.File file = new java.io.File(filePath);
+		int maxWaitSeconds = 15;
+		for (int i = 0; i < maxWaitSeconds; i++) {
+			if (file.exists()) {
+				return true;
+			}
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+				break;
+			}
+		}
 		return file.exists();
 	}
 

@@ -10,28 +10,28 @@ import org.testng.annotations.Test;
 
 import com.mondial.pages.LedgerPage;
 import com.mondial.pages.LoginPage;
+import com.mondial.pages.ReportsWriter;
 
 /**
- * Integration Test: Ledger - Templated Report
- * Verifies that ledgers on the Ledger page match ledgers on the Templated Report page
- *
- * NOTE: Tests are disabled because the TemplatedReportPage page object has not been
- * migrated to the new framework yet. Once TemplatedReportPage is available, re-enable
- * these tests and replace the TODO sections with actual templated report assertions.
+ * Integration Test: Ledger - Report Writer (Create/Delete)
+ * Verifies that creating a new ledger makes it appear in the Report Writer
+ * ledger dropdown, and deleting it removes it from the dropdown.
  */
 public class IntegrationLedger_TemplatedReportTest extends BaseTest {
 
 	private LedgerPage ledgerPage;
+	private ReportsWriter reportsWriter;
 	private String ledgerName;
 	private List<String> ledgerPageList;
-	private List<String> templatedReportList;
+	private List<String> reportWriterList;
 
 	@BeforeClass
 	public void integrationSetup() {
-		System.out.println("=== Starting Ledger-TemplatedReport Integration Test Setup ===");
+		System.out.println("=== Starting Ledger Create/Delete Integration Test Setup ===");
 
 		LoginPage loginPage = new LoginPage(driver);
 		ledgerPage = new LedgerPage(driver);
+		reportsWriter = new ReportsWriter(driver);
 
 		String username = config.getProperty("validUsername");
 		String password = config.getProperty("validPassword");
@@ -47,17 +47,15 @@ public class IntegrationLedger_TemplatedReportTest extends BaseTest {
 
 		ledgerName = "Ledger_" + System.currentTimeMillis();
 		System.out.println("Generated Ledger name: " + ledgerName);
-		System.out.println("=== Ledger-TemplatedReport Integration Test Setup Complete ===\n");
+		System.out.println("=== Ledger Create/Delete Integration Test Setup Complete ===\n");
 	}
 
-	// TODO: Re-enable once TemplatedReportPage page object is migrated to the new framework.
-	// This test needs TemplatedReportPage methods: navigateToTemplatedReport(),
-	// selectRequiredValues(company, reportType), getLedgerDropdownValues()
-	@Test(priority = 1, enabled = false,
-			description = "Verify all Ledgers on Ledger Page are available on Templated Report Page")
-	public void testLedgerIntegrationWithTemplatedReport() {
-		System.out.println("\n[TEST 1] Verifying ledger integration with Templated Report...");
+	@Test(priority = 1,
+			description = "Verify newly created Ledger appears in Report Writer ledger dropdown")
+	public void testCreatedLedgerAppearsInReportWriter() {
+		System.out.println("\n[TEST 1] Creating ledger and verifying it appears in Report Writer...");
 
+		// Create a new ledger
 		ledgerPage.navigateToLedgerPage();
 		Assert.assertTrue(ledgerPage.isAddLedgerBtnDisplayed(),
 				"Add Ledger button should be displayed");
@@ -69,22 +67,31 @@ public class IntegrationLedger_TemplatedReportTest extends BaseTest {
 
 		ledgerPage.waitForSuccessMessageToDisappear();
 
-		// TODO: Navigate to Templated Report page, select company/report type,
-		// get ledger dropdown values and compare with ledgerPageList
-		// templatedReportPage.navigateToTemplatedReport();
-		// templatedReportPage.selectRequiredValues(companyName, "Trial Balance");
-		// templatedReportList = templatedReportPage.getLedgerDropdownValues();
-		// Assert.assertEquals(ledgerPageList, templatedReportList);
+		// Get ledger values from the Ledger table
+		ledgerPageList = reportsWriter.getLedgerTableValues();
+		System.out.println("Ledger Page values: " + ledgerPageList);
 
-		System.out.println("[TEST 1] Ledger integration with Templated Report verified");
+		// Navigate to Report Writer and compare ledger dropdown
+		reportsWriter.navigateToReportWriter();
+		String heading = reportsWriter.getReportHeading();
+		Assert.assertTrue(heading.contains("Reports"),
+				"Report heading should be displayed");
+
+		reportWriterList = reportsWriter.getLedgerDropdownValues();
+		System.out.println("Report Writer values: " + reportWriterList);
+
+		Assert.assertEquals(ledgerPageList, reportWriterList,
+				"Ledger values should match between Ledger Page and Report Writer dropdown");
+
+		System.out.println("[TEST 1] Created ledger verified in Report Writer successfully");
 	}
 
-	// TODO: Re-enable once TemplatedReportPage page object is migrated to the new framework.
-	@Test(priority = 2, enabled = false, dependsOnMethods = {"testLedgerIntegrationWithTemplatedReport"},
-			description = "Verify user is able to Delete Unused Ledger")
-	public void testDeleteLedger() {
+	@Test(priority = 2, dependsOnMethods = {"testCreatedLedgerAppearsInReportWriter"},
+			description = "Verify deleted Ledger is removed from Report Writer ledger dropdown")
+	public void testDeletedLedgerRemovedFromReportWriter() {
 		System.out.println("\n[TEST 2] Deleting Ledger: " + ledgerName);
 
+		// Delete the ledger
 		ledgerPage.navigateToLedgerPage();
 		Assert.assertTrue(ledgerPage.isAddLedgerBtnDisplayed(),
 				"Add Ledger button should be displayed");
@@ -106,13 +113,18 @@ public class IntegrationLedger_TemplatedReportTest extends BaseTest {
 		Assert.assertFalse(ledgerPage.verifyRecordPresent(ledgerName),
 				"Deleted ledger should no longer appear in the table");
 
-		// TODO: Navigate to Templated Report page and verify ledger is removed
-		// from the dropdown as well
-		// templatedReportPage.navigateToTemplatedReport();
-		// templatedReportPage.selectRequiredValues(companyName, "Trial Balance");
-		// templatedReportList = templatedReportPage.getLedgerDropdownValues();
-		// Assert.assertEquals(ledgerPageList, templatedReportList);
+		// Get updated ledger values from the Ledger table
+		ledgerPageList = reportsWriter.getLedgerTableValues();
+		System.out.println("Ledger Page values after delete: " + ledgerPageList);
 
-		System.out.println("[TEST 2] Ledger deleted successfully: " + ledgerName);
+		// Navigate to Report Writer and compare ledger dropdown
+		reportsWriter.navigateToReportWriter();
+		reportWriterList = reportsWriter.getLedgerDropdownValues();
+		System.out.println("Report Writer values after delete: " + reportWriterList);
+
+		Assert.assertEquals(ledgerPageList, reportWriterList,
+				"Ledger values should match after deletion");
+
+		System.out.println("[TEST 2] Deleted ledger removed from Report Writer successfully");
 	}
 }

@@ -49,6 +49,9 @@ public class LedgerPage extends BasePage {
 	@FindBy(xpath = "//div[@class='alert alert-success']")
 	private WebElement successMessage;
 
+	@FindBy(xpath = "//div[@class='alert alert-danger']")
+	private WebElement warningMessage;
+
 	// Constructor
 	public LedgerPage(WebDriver driver) {
 		super(driver);
@@ -81,6 +84,35 @@ public class LedgerPage extends BasePage {
 		scrollToElement(editLink);
 		wait.until(ExpectedConditions.elementToBeClickable(editLink));
 		editLink.click();
+	}
+
+	/**
+	 * Click the Add Ledger button
+	 */
+	public void clickAddLedger() {
+		clickElement(addLedgerBtn);
+	}
+
+	/**
+	 * Click edit on the first record in the table
+	 */
+	public void clickEditFirstRecord() {
+		WebElement editLink = driver.findElement(By.xpath(
+				"//table//tr[1]//td//following-sibling::td//a[@data-original-title = 'Edit']"));
+		scrollToElement(editLink);
+		wait.until(ExpectedConditions.elementToBeClickable(editLink));
+		editLink.click();
+	}
+
+	/**
+	 * Click delete on the first record in the table (alert handling done in test)
+	 */
+	public void clickDeleteFirstRecord() {
+		WebElement deleteLink = driver.findElement(By.xpath(
+				"//table//tr[1]//td//following-sibling::td//a[@data-original-title = 'Delete']"));
+		scrollToElement(deleteLink);
+		wait.until(ExpectedConditions.elementToBeClickable(deleteLink));
+		deleteLink.click();
 	}
 
 	// ============================================
@@ -223,13 +255,22 @@ public class LedgerPage extends BasePage {
 	}
 
 	/**
+	 * Check if warning/danger message is displayed
+	 * @return true if displayed, false otherwise
+	 */
+	public boolean isWarningMessageDisplayed() {
+		try {
+			wait.until(ExpectedConditions.visibilityOf(warningMessage));
+			return warningMessage.isDisplayed();
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	/**
 	 * Wait for success message to disappear
 	 */
 	public void waitForSuccessMessageToDisappear() {
-		try {
-			wait.until(ExpectedConditions.invisibilityOf(successMessage));
-		} catch (Exception e) {
-			// Message may have already disappeared
-		}
+		dismissAlert();
 	}
 }

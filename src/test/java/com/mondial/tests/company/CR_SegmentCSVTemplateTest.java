@@ -68,6 +68,13 @@ public class CR_SegmentCSVTemplateTest extends BaseTest {
         System.out.println("Checking for existing segments to clean up...");
         reportingSegmentPage.deleteAllSegments();
 
+        // Delete stale template CSV from previous runs
+        java.io.File staleCSV = new java.io.File(TEMPLATE_CSV_PATH);
+        if (staleCSV.exists()) {
+            staleCSV.delete();
+            System.out.println("Deleted stale template CSV: " + TEMPLATE_CSV_PATH);
+        }
+
         System.out.println("Navigated to GL Account Segments page");
         System.out.println("=== Segment CSV Template Test Setup Complete ===\n");
     }

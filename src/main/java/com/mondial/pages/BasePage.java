@@ -92,6 +92,32 @@ public class BasePage {
     }
 
     /**
+     * Dismiss a Bootstrap alert by clicking its close button.
+     * Works for alert-success, alert-danger, alert-warning, etc.
+     * Falls back to waiting for the alert to disappear on its own.
+     */
+    protected void dismissAlert() {
+        try {
+            WebElement closeBtn = new WebDriverWait(driver, Duration.ofSeconds(3)).until(
+                ExpectedConditions.elementToBeClickable(
+                    By.xpath("//div[contains(@class,'alert')]//button[@class='close'] | //div[contains(@class,'alert')]//button[@data-dismiss='alert']")));
+            closeBtn.click();
+            new WebDriverWait(driver, Duration.ofSeconds(3)).until(
+                ExpectedConditions.invisibilityOfElementLocated(
+                    By.xpath("//div[contains(@class,'alert')]")));
+        } catch (Exception e) {
+            // Close button not found or already dismissed — wait briefly for auto-dismiss
+            try {
+                new WebDriverWait(driver, Duration.ofSeconds(5)).until(
+                    ExpectedConditions.invisibilityOfElementLocated(
+                        By.xpath("//div[contains(@class,'alert')]")));
+            } catch (Exception ignored) {
+                // Alert may have already disappeared
+            }
+        }
+    }
+
+    /**
      * Wait until an element's innerText no longer contains the specified text.
      * Useful for waiting after navigation when heading should change.
      * @param element - WebElement to monitor

@@ -144,6 +144,18 @@ public class CustomersVendorsPage extends BasePage {
 	 */
 	public boolean isFileDownloaded(String filePath) {
 		java.io.File file = new java.io.File(filePath);
+		int maxWaitSeconds = 15;
+		for (int i = 0; i < maxWaitSeconds; i++) {
+			if (file.exists()) {
+				return true;
+			}
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+				break;
+			}
+		}
 		return file.exists();
 	}
 
@@ -250,11 +262,7 @@ public class CustomersVendorsPage extends BasePage {
 	 * Wait for confirmation message to disappear after delete
 	 */
 	public void waitForConfirmationMessageToDisappear() {
-		try {
-			wait.until(ExpectedConditions.invisibilityOf(confirmationMsg));
-		} catch (Exception e) {
-			// Message may have already disappeared
-		}
+		dismissAlert();
 	}
 
 	// ============================================
