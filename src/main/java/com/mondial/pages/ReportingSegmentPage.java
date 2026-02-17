@@ -64,7 +64,7 @@ public class ReportingSegmentPage extends BasePage {
 	@FindBy(xpath = "//ul//li[contains(text(), \"Name can't be blank\")]")
 	private WebElement nameBlankError;
 
-	@FindBy(xpath = "//ul//li[contains(text(), \"Field validator can't be blank\")]")
+	@FindBy(xpath = "//ul//li[contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'validator') and contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'blank')]")
 	private WebElement fieldValidatorBlankError;
 
 	@FindBy(xpath = "//ul//li[contains(text(), 'Ordinal must be greater than 1')]")
