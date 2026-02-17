@@ -1,4 +1,6 @@
-package com.mondial.tests;
+package com.mondial.tests.integrations;
+
+import com.mondial.tests.BaseTest;
 
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;

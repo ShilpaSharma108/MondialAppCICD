@@ -12,79 +12,85 @@
 
     <test name="Login Tests">
         <classes>
-            <class name="com.mondial.tests.LoginTest"/>
+            <class name="com.mondial.tests.login.LoginTest"/>
         </classes>
     </test>
 
     <test name="User Creation Tests">
         <classes>
-            <class name="com.mondial.tests.UserCreationTest"/>
+            <class name="com.mondial.tests.login.UserCreationTest"/>
         </classes>
     </test>
 
     <test name="Zendesk Tests">
         <classes>
-            <class name="com.mondial.tests.ZendeskTest"/>
+            <class name="com.mondial.tests.integrations.ZendeskTest"/>
         </classes>
     </test>
 
     <test name="Ledger CRUD Tests">
         <classes>
-            <class name="com.mondial.tests.ES_LedgerCRUDTest"/>
+            <class name="com.mondial.tests.enterprise.ES_LedgerCRUDTest"/>
+        </classes>
+    </test>
+
+    <test name="Ledger Unauthorised Access Tests">
+        <classes>
+            <class name="com.mondial.tests.enterprise.ES_LedgerUnauthorisedAccessTest"/>
         </classes>
     </test>
 
     <test name="Natural Account Set CRUD Tests">
         <classes>
-            <class name="com.mondial.tests.CR_NaturalAccCRUDTest"/>
+            <class name="com.mondial.tests.company.CR_NaturalAccCRUDTest"/>
         </classes>
     </test>
 
     <test name="Reporting Segment CRUD Tests">
         <classes>
-            <class name="com.mondial.tests.CR_SegmentCRUDTest"/>
+            <class name="com.mondial.tests.company.CR_SegmentCRUDTest"/>
         </classes>
     </test>
 
     <test name=" Reporting Segment Validation Tests">
         <classes>
-            <class name="com.mondial.tests.CR_SegmentValidationTest"/>
+            <class name="com.mondial.tests.company.CR_SegmentValidationTest"/>
         </classes>
     </test>
 
     <test name="Reporting Segment CSV Template Tests">
         <classes>
-            <class name="com.mondial.tests.CR_SegmentCSVTemplateTest"/>
+            <class name="com.mondial.tests.company.CR_SegmentCSVTemplateTest"/>
         </classes>
     </test>
 
     <test name="Reporting Segment Options CRUD Tests">
         <classes>
-            <class name="com.mondial.tests.CR_SegmentOptionsAllTest"/>
+            <class name="com.mondial.tests.company.CR_SegmentOptionsAllTest"/>
         </classes>
     </test>
 
     <test name="Customers CSV Upload Tests">
         <classes>
-            <class name="com.mondial.tests.CR_CustomersTest"/>
+            <class name="com.mondial.tests.company.CR_CustomersTest"/>
         </classes>
     </test>
 
     <test name="Customers Grid Tests">
         <classes>
-            <class name="com.mondial.tests.CR_CustomersGridTest"/>
+            <class name="com.mondial.tests.company.CR_CustomersGridTest"/>
         </classes>
     </test>
 
     <test name="Vendors CSV Upload Tests">
         <classes>
-            <class name="com.mondial.tests.CR_VendorsTest"/>
+            <class name="com.mondial.tests.company.CR_VendorsTest"/>
         </classes>
     </test>
 
     <test name="Vendors Grid Tests">
         <classes>
-            <class name="com.mondial.tests.CR_VendorsGridTest"/>
+            <class name="com.mondial.tests.company.CR_VendorsGridTest"/>
         </classes>
     </test>
 

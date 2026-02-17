@@ -1,4 +1,6 @@
-package com.mondial.tests;
+package com.mondial.tests.company;
+
+import com.mondial.tests.BaseTest;
 
 import java.util.List;
 

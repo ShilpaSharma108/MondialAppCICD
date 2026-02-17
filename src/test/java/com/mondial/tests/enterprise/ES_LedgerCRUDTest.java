@@ -1,4 +1,6 @@
-package com.mondial.tests;
+package com.mondial.tests.enterprise;
+
+import com.mondial.tests.BaseTest;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
