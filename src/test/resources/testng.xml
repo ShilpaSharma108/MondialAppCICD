@@ -34,7 +34,7 @@
         </classes>
     </test>
 
-    <test name="Ledger Create Delete Integration Tests">
+    <test name="Ledger Template Report Integration Tests">
         <classes>
             <class name="com.mondial.tests.integrations.IntegrationLedger_TemplatedReportTest"/>
         </classes>
@@ -79,6 +79,18 @@
     <test name="Reporting Segment Options CRUD Tests">
         <classes>
             <class name="com.mondial.tests.company.CR_SegmentOptionsAllTest"/>
+        </classes>
+    </test>
+
+    <test name="Chart of Accounts CRUD Tests">
+        <classes>
+            <class name="com.mondial.tests.company.CR_COACrudTest"/>
+        </classes>
+    </test>
+
+    <test name="Chart of Accounts CSV Upload Tests">
+        <classes>
+            <class name="com.mondial.tests.company.CR_COAUploadDownloadTest"/>
         </classes>
     </test>
 

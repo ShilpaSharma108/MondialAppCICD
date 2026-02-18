@@ -18,7 +18,7 @@ import java.util.Map;
 public class DriverManager {
     private static ThreadLocal<WebDriver> driver = new ThreadLocal<>();
     private static ConfigReader config = new ConfigReader();
-    private static final String DOWNLOAD_DIR = System.getProperty("user.home") + java.io.File.separator + "Downloads";
+    private static final String DOWNLOAD_DIR = System.getProperty("user.dir") + java.io.File.separator + "downloads";
 
     public static WebDriver getDriver() {
         if (driver.get() == null) {
@@ -33,6 +33,12 @@ public class DriverManager {
     }
 
     private static void initializeDriver() {
+        // Ensure download directory exists (needed for CI/CD environments like GitHub Actions)
+        java.io.File downloadDir = new java.io.File(DOWNLOAD_DIR);
+        if (!downloadDir.exists()) {
+            downloadDir.mkdirs();
+        }
+
         String browser = getBrowserFromSystemOrConfig();
         boolean headless = getHeadlessFromSystemOrConfig();
         String os = getOSFromSystemOrConfig();

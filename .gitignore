@@ -78,6 +78,11 @@ $RECYCLE.BIN/
 .directory
 
 # ===============================================
+# DOWNLOADED FILES (Test CSV downloads during execution)
+# ===============================================
+downloads/
+
+# ===============================================
 # WEBDRIVER EXECUTABLES (WebDriverManager downloads these)
 # ===============================================
 drivers/
