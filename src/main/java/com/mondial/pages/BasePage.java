@@ -83,7 +83,8 @@ public class BasePage {
 
     protected void waitForPageLoad() {
         try {
-            new WebDriverWait(driver, Duration.ofSeconds(30)).until(
+            int pageLoadTimeout = Integer.parseInt(config.getProperty("pageLoadTimeout"));
+            new WebDriverWait(driver, Duration.ofSeconds(pageLoadTimeout)).until(
                 d -> ((JavascriptExecutor) d).executeScript("return document.readyState").equals("complete")
             );
         } catch (Exception e) {
