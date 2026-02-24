@@ -64,8 +64,8 @@ public class ReportingSegmentPage extends BasePage {
 	@FindBy(xpath = "//ul//li[contains(text(), \"Name can't be blank\")]")
 	private WebElement nameBlankError;
 
-	@FindBy(xpath = "//ul//li[contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'validator') and contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'blank')]")
-	private WebElement fieldValidatorBlankError;
+	private By fieldValidatorBlankErrorLocator = By.xpath(
+			"//ul//li[contains(., \"must exist\") and not(contains(., 'Name'))]");
 
 	@FindBy(xpath = "//ul//li[contains(text(), 'Ordinal must be greater than 1')]")
 	private WebElement ordinalError;
@@ -211,9 +211,26 @@ public class ReportingSegmentPage extends BasePage {
 	 */
 	public boolean isFieldValidatorBlankErrorDisplayed() {
 		try {
-			wait.until(ExpectedConditions.visibilityOf(fieldValidatorBlankError));
-			return fieldValidatorBlankError.isDisplayed();
+			wait.until(ExpectedConditions.visibilityOfElementLocated(fieldValidatorBlankErrorLocator));
+			return true;
 		} catch (Exception e) {
+			// Dump all error-related HTML for debugging
+			String errorHtml = (String) ((org.openqa.selenium.JavascriptExecutor) driver)
+					.executeScript(
+						"var uls = document.querySelectorAll('ul');" +
+						"var result = [];" +
+						"for (var i = 0; i < uls.length; i++) {" +
+						"  var html = uls[i].innerHTML.trim();" +
+						"  if (html.length > 0 && html.length < 500) {" +
+						"    result.push('UL[' + i + ']: ' + html);" +
+						"  }" +
+						"}" +
+						"var alerts = document.querySelectorAll('.alert, .error, .errors, .field_with_errors, [class*=error], [class*=alert]');" +
+						"for (var j = 0; j < alerts.length; j++) {" +
+						"  result.push('ERR[' + j + ']: tag=' + alerts[j].tagName + ' class=' + alerts[j].className + ' text=[' + alerts[j].innerText.substring(0,200) + ']');" +
+						"}" +
+						"return result.join('\\n');");
+			System.out.println("DEBUG error HTML:\n" + errorHtml);
 			return false;
 		}
 	}

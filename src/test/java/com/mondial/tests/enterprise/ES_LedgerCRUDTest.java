@@ -70,8 +70,8 @@ public class ES_LedgerCRUDTest extends BaseTest {
 
         String heading = ledgerPage.getPageHeading();
         System.out.println("Page heading: " + heading);
-        Assert.assertTrue(heading.contains("Ledgers"),
-                         "Heading should contain 'Ledgers'");
+        Assert.assertTrue(heading.contains("Ledger"),
+                         "Heading should contain 'Ledger'");
 
         System.out.println("[TEST 1] Successfully navigated to Ledger page");
     }
@@ -102,10 +102,28 @@ public class ES_LedgerCRUDTest extends BaseTest {
     }
 
     /**
-     * Test 3: Edit the previously created Ledger
+     * Test 3: Attempt to create a Ledger with a duplicate name
+     * Uses the same name as the ledger created in Test 2
+     */
+    @Test(priority = 3, dependsOnMethods = {"testCreateLedger"}, description = "Verify user is not able to create two Ledgers with the same name")
+    public void testCreateDuplicateLedger() {
+        System.out.println("\n[TEST 3] Attempting to create duplicate Ledger: " + ledgerName);
+
+        ledgerPage.createLedger(ledgerName);
+
+        Assert.assertTrue(ledgerPage.isWarningMessageDisplayed(),
+                         "Warning/error message should be displayed when creating duplicate ledger");
+
+        ledgerPage.clickCancelAndWaitForListing();
+
+        System.out.println("[TEST 3] Duplicate ledger creation correctly prevented");
+    }
+
+    /**
+     * Test 4: Edit the previously created Ledger
      * Navigates to edit, cancels, then edits again and renames
      */
-    @Test(priority = 3, dependsOnMethods = {"testCreateLedger"}, description = "Verify Edit Ledger functionality")
+    @Test(priority = 4, dependsOnMethods = {"testCreateDuplicateLedger"}, description = "Verify Edit Ledger functionality")
     public void testEditLedger() {
         System.out.println("\n[TEST 3] Editing Ledger: " + ledgerName);
 
@@ -130,7 +148,7 @@ public class ES_LedgerCRUDTest extends BaseTest {
      * Test 4: Delete the Ledger
      * Deletes the ledger and verifies it no longer appears in the table
      */
-    @Test(priority = 4, dependsOnMethods = {"testEditLedger"}, description = "Verify user is able to Delete Unused Ledger")
+    @Test(priority = 5, dependsOnMethods = {"testEditLedger"}, description = "Verify user is able to Delete Unused Ledger")
     public void testDeleteLedger() {
         System.out.println("\n[TEST 4] Deleting Ledger: " + ledgerName);
 

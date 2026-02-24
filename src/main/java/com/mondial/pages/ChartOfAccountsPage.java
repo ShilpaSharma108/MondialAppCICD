@@ -1,11 +1,16 @@
 package com.mondial.pages;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -136,9 +141,12 @@ public class ChartOfAccountsPage extends BasePage {
 		for (int i = 0; i < container.size(); i++) {
 			if (container.get(i).getAttribute("innerText").contains(name)) {
 				WebElement editLink = driver.findElement(By.xpath(
-						"//div[@ref='eContainer']//div[@role='row']//div[contains(., '"
-						+ name + "')]//following-sibling::div[contains(.,'Edit')]"));
-				clickElement(editLink);
+						"//div[@ref='eContainer']//div[@role='row'][.//*[contains(text(),'"
+						+ name + "')]]//a[contains(text(),'Edit')]"));
+				scrollToElement(editLink);
+				wait.until(ExpectedConditions.elementToBeClickable(editLink));
+				editLink.click();
+				waitForPageLoad();
 				break;
 			}
 		}
@@ -512,6 +520,227 @@ public class ChartOfAccountsPage extends BasePage {
 	 */
 	public void waitForSuccessMessageToDisappear() {
 		dismissAlert();
+	}
+
+	// ============================================
+	// SORT METHODS
+	// ============================================
+
+	/**
+	 * Click an AG Grid column header to sort by col-id
+	 * @param colId - The col-id attribute of the column to sort
+	 */
+	public void clickColumnHeader(String colId) {
+		waitForPageLoad();
+		WebElement header = driver.findElement(
+				By.xpath("//div[contains(@class,'ag-header-row')]//div[@col-id='" + colId + "']"));
+		clickElement(header);
+		waitForPageLoad();
+	}
+
+	/**
+	 * Click an AG Grid column header to sort by display text
+	 * @param headerText - The visible text of the column header
+	 */
+	public void clickColumnHeaderByText(String headerText) {
+		waitForPageLoad();
+		WebElement header = driver.findElement(
+				By.xpath("//div[contains(@class,'ag-header-cell')]" +
+						"[.//span[contains(@class,'ag-header-cell-text')][contains(text(),'" + headerText + "')]]"));
+		clickElement(header);
+		// AG Grid sorts client-side without triggering page load events;
+		// wait for the grid to finish re-rendering rows
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+		}
+		waitForPageLoad();
+	}
+
+	/**
+	 * Get all cell values for a specific column from the AG Grid by col-id
+	 * @param colId - The col-id attribute of the column
+	 * @return List of cell values as strings
+	 */
+	public List<String> getColumnValues(String colId) {
+		waitForPageLoad();
+		List<WebElement> cells = driver.findElements(
+				By.xpath("//div[@role='gridcell'][@col-id='" + colId + "']"));
+		List<String> values = new ArrayList<>();
+		for (WebElement cell : cells) {
+			String text = cell.getAttribute("innerText").trim();
+			if (!text.isEmpty()) {
+				values.add(text);
+			}
+		}
+		return values;
+	}
+
+	/**
+	 * Get all cell values for a column by its position index (0-based) in each row
+	 * @param colIndex - The 0-based column position
+	 * @return List of cell values as strings
+	 */
+	public List<String> getColumnValuesByIndex(int colIndex) {
+		waitForPageLoad();
+		List<String> values = new ArrayList<>();
+		// Re-query rows from the DOM to get fresh values after sort
+		List<WebElement> rows = driver.findElements(
+				By.xpath("//div[@ref='eContainer']//div[@role='row']"));
+		// AG Grid positions rows via CSS (top/transform), so DOM order != visual order.
+		// Sort rows by their row-index attribute to match the visual display order.
+		rows.sort((a, b) -> {
+			int indexA = Integer.parseInt(a.getAttribute("row-index"));
+			int indexB = Integer.parseInt(b.getAttribute("row-index"));
+			return Integer.compare(indexA, indexB);
+		});
+		for (WebElement row : rows) {
+			List<WebElement> cells = row.findElements(By.xpath(".//div[@role='gridcell']"));
+			if (colIndex < cells.size()) {
+				String text = cells.get(colIndex).getAttribute("innerText").trim();
+				if (!text.isEmpty()) {
+					values.add(text);
+				}
+			}
+		}
+		return values;
+	}
+
+	/**
+	 * Check if column values are sorted in ascending order
+	 * @param values - List of string values to check
+	 * @return true if sorted ascending (case-insensitive)
+	 */
+	public boolean isSortedAscending(List<String> values) {
+		List<String> sorted = values.stream()
+				.map(String::toLowerCase)
+				.collect(Collectors.toList());
+		List<String> expected = new ArrayList<>(sorted);
+		Collections.sort(expected);
+		return sorted.equals(expected);
+	}
+
+	/**
+	 * Check if column values are sorted in descending order
+	 * @param values - List of string values to check
+	 * @return true if sorted descending (case-insensitive)
+	 */
+	public boolean isSortedDescending(List<String> values) {
+		List<String> sorted = values.stream()
+				.map(String::toLowerCase)
+				.collect(Collectors.toList());
+		List<String> expected = new ArrayList<>(sorted);
+		Collections.sort(expected, Collections.reverseOrder());
+		return sorted.equals(expected);
+	}
+
+	// ============================================
+	// FILTER METHODS
+	// ============================================
+
+	/**
+	 * Open the AG Grid filter menu for a column by hovering over header and clicking filter icon
+	 * @param colId - The col-id attribute of the column
+	 */
+	public void openColumnFilter(String colId) {
+		waitForPageLoad();
+		WebElement header = driver.findElement(
+				By.xpath("//div[contains(@class,'ag-header-row')]//div[@col-id='" + colId + "']"));
+		new Actions(driver).moveToElement(header).perform();
+		WebElement menuIcon = wait.until(ExpectedConditions.visibilityOf(
+				header.findElement(By.xpath(".//span[contains(@class,'ag-header-cell-menu-button')]"))));
+		clickElement(menuIcon);
+
+		try {
+			WebElement filterTab = wait.until(ExpectedConditions.elementToBeClickable(
+					By.xpath("//span[contains(@class,'ag-tab')][.//span[contains(@class,'ag-icon-filter')]]")));
+			filterTab.click();
+		} catch (Exception e) {
+			System.out.println("Filter tab not found, filter input may be directly visible");
+		}
+	}
+
+	/**
+	 * Open the AG Grid filter menu for a column by display text
+	 * @param headerText - The visible text of the column header
+	 */
+	public void openColumnFilterByText(String headerText) {
+		waitForPageLoad();
+		WebElement header = driver.findElement(
+				By.xpath("//div[contains(@class,'ag-header-cell')]" +
+						"[.//span[contains(@class,'ag-header-cell-text')][contains(text(),'" + headerText + "')]]"));
+		new Actions(driver).moveToElement(header).perform();
+		WebElement menuIcon = wait.until(ExpectedConditions.visibilityOf(
+				header.findElement(By.xpath(".//span[contains(@class,'ag-header-cell-menu-button')]"))));
+		clickElement(menuIcon);
+
+		try {
+			WebElement filterTab = wait.until(ExpectedConditions.elementToBeClickable(
+					By.xpath("//span[contains(@class,'ag-tab')][.//span[contains(@class,'ag-icon-filter')]]")));
+			filterTab.click();
+		} catch (Exception e) {
+			System.out.println("Filter tab not found, filter input may be directly visible");
+		}
+	}
+
+	/**
+	 * Enter text into the AG Grid filter input
+	 * @param text - Text to filter by
+	 */
+	public void enterFilterText(String text) {
+		WebElement filterInput = wait.until(ExpectedConditions.visibilityOfElementLocated(
+				By.xpath("//div[contains(@class,'ag-filter')]//input")));
+		filterInput.clear();
+		filterInput.sendKeys(text);
+		waitForPageLoad();
+	}
+
+	/**
+	 * Clear the active AG Grid filter
+	 */
+	public void clearFilter() {
+		try {
+			WebElement filterInput = driver.findElement(
+					By.xpath("//div[contains(@class,'ag-filter')]//input"));
+			filterInput.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+			filterInput.sendKeys(Keys.DELETE);
+			waitForPageLoad();
+		} catch (Exception e) {
+			System.out.println("Filter already cleared or not present");
+		}
+	}
+
+	/**
+	 * Get the number of rows currently displayed in the AG Grid
+	 * @return Number of visible rows
+	 */
+	public int getRecordCount() {
+		waitForPageLoad();
+		return container.size();
+	}
+
+	// ============================================
+	// INVALID CSV UPLOAD METHODS
+	// ============================================
+
+	/**
+	 * Check if the upload error message is displayed.
+	 * Checks for Error log button, alert-danger div, or "failed" flash message.
+	 * @return true if error message is displayed
+	 */
+	public boolean isUploadErrorDisplayed() {
+		try {
+			WebElement errorIndicator = wait.until(ExpectedConditions.visibilityOfElementLocated(
+					By.xpath("//button[contains(text(),'Error log')] | //a[contains(text(),'Error log')]"
+							+ " | //div[contains(@class,'alert-danger')]"
+							+ " | //div[contains(@class,'alert')][contains(text(),'failed')]"
+							+ " | //div[contains(@class,'alert')][contains(text(),'error')]"
+							+ " | //div[contains(@class,'alert')][contains(text(),'Error')]")));
+			return errorIndicator.isDisplayed();
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	/**

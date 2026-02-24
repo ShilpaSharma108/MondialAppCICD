@@ -108,12 +108,54 @@ public class CR_COACrudTest extends BaseTest {
     }
 
     /**
-     * Test 3: Edit the previously created GL Account
+     * Test 3: Attempt to create a duplicate GL Account
+     * Uses the same account number as the one just created and verifies failure message
+     */
+    @Test(priority = 3, dependsOnMethods = {"testCreateGLAccount"}, description = "Verify duplicate GL Account creation fails")
+    public void testCreateDuplicateGLAccount() {
+        System.out.println("\n[TEST 3] Creating duplicate GL Account: " + acNumber);
+
+        coaPage.clickAddGLAccountBtn();
+        coaPage.incorrectGLAccount(acNumber);
+
+        Assert.assertTrue(coaPage.isFailureMessageDisplayed(),
+                         "Failure message should be displayed for duplicate account number");
+
+        coaPage.clickCancelAndWaitForListing();
+
+        System.out.println("[TEST 3] Duplicate GL Account creation correctly rejected");
+    }
+
+    /**
+     * Test 4: Attempt to create an incomplete GL Account
+     * Submits form without type/subtype/currency and verifies failure message
+     */
+    @Test(priority = 4, dependsOnMethods = {"testCreateGLAccount"}, description = "Verify incomplete GL Account creation fails")
+    public void testCreateIncompleteGLAccount() {
+        System.out.println("\n[TEST 4] Creating incomplete GL Account...");
+
+        coaPage.clickAddGLAccountBtn();
+        coaPage.incompleteGLAccount("999999");
+
+        Assert.assertTrue(coaPage.isFailureMessageDisplayed(),
+                         "Failure message should be displayed for incomplete account");
+
+        coaPage.clickCancelAndWaitForListing();
+
+        System.out.println("[TEST 4] Incomplete GL Account creation correctly rejected");
+    }
+
+    /**
+     * Test 5: Edit the previously created GL Account
      * Navigates to edit, cancels, then edits again and renames
      */
-    @Test(priority = 3, dependsOnMethods = {"testCreateGLAccount"}, description = "Verify Edit GL Account functionality")
+    @Test(priority = 5, dependsOnMethods = {"testCreateGLAccount"}, description = "Verify Edit GL Account functionality")
     public void testEditGLAccount() {
-        System.out.println("\n[TEST 3] Editing GL Account: " + acNumber);
+        System.out.println("\n[TEST 5] Editing GL Account: " + acNumber);
+
+        // Refresh page to ensure clean state after validation tests
+        driver.navigate().refresh();
+        waitForPageLoad();
 
         coaPage.navigateToEdit(acNumber);
 
@@ -136,16 +178,16 @@ public class CR_COACrudTest extends BaseTest {
         Assert.assertTrue(coaPage.verifyGLAccount(acNumber),
                          "Updated GL Account should appear in the table");
 
-        System.out.println("[TEST 3] GL Account updated to: " + acNumber);
+        System.out.println("[TEST 5] GL Account updated to: " + acNumber);
     }
 
     /**
-     * Test 4: Delete the GL Account
+     * Test 6: Delete the GL Account
      * Deletes the account and verifies it no longer appears in the table
      */
-    @Test(priority = 4, dependsOnMethods = {"testEditGLAccount"}, description = "Verify user is able to Delete GL Account")
+    @Test(priority = 6, dependsOnMethods = {"testEditGLAccount"}, description = "Verify user is able to Delete GL Account")
     public void testDeleteGLAccount() {
-        System.out.println("\n[TEST 4] Deleting GL Account: " + acNumber);
+        System.out.println("\n[TEST 6] Deleting GL Account: " + acNumber);
 
         coaPage.clickDelete(acNumber);
 
@@ -159,7 +201,7 @@ public class CR_COACrudTest extends BaseTest {
         Assert.assertFalse(coaPage.verifyGLAccount(acNumber),
                           "Deleted GL Account should no longer appear in the table");
 
-        System.out.println("[TEST 4] GL Account deleted successfully: " + acNumber);
+        System.out.println("[TEST 6] GL Account deleted successfully: " + acNumber);
     }
 
     /**

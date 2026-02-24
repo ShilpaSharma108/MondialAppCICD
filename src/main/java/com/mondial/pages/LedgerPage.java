@@ -25,7 +25,7 @@ public class LedgerPage extends BasePage {
 	@FindBy(xpath = "//h4")
 	private WebElement pageHeading;
 
-	@FindBy(xpath = "//div[@class='container']//a[contains(text(),'Ledger')]")
+	@FindBy(xpath = "//a[contains(@class, 'btn')][contains(text(),'Ledger')]")
 	private WebElement addLedgerBtn;
 
 	@FindBy(xpath = "//input[@id='ledger_name']")
@@ -70,6 +70,7 @@ public class LedgerPage extends BasePage {
 		clickElement(enterpriseSetup);
 		wait.until(ExpectedConditions.visibilityOf(ledgerMenu));
 		clickElement(ledgerMenu);
+		waitForPageLoad();
 		wait.until(ExpectedConditions.visibilityOf(addLedgerBtn));
 	}
 

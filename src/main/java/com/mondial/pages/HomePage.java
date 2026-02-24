@@ -47,9 +47,6 @@ public class HomePage extends BasePage {
 	@FindBy(xpath = "//i[@class='ti-help ']")
 	private WebElement helpIcon;
 	
-	@FindBy(xpath = "//a[@data-original-title='Logout']/parent::li")
-	private WebElement loggedInUser;
-	
 	@FindBy(xpath = "//a[contains(.,'Submit a request')]")
 	private WebElement submitRequest;
 	
@@ -492,15 +489,6 @@ public class HomePage extends BasePage {
 	 */
 	public void waitForSubmitRequest() {
 		wait.until(ExpectedConditions.visibilityOf(submitRequest));
-	}
-
-	/**
-	 * Get the logged in user's display name
-	 * @return Logged in user name text
-	 */
-	public String getLoggedInUserName() {
-		wait.until(ExpectedConditions.visibilityOf(loggedInUser));
-		return loggedInUser.getAttribute("innerText");
 	}
 
 	// ============================================

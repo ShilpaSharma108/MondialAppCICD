@@ -100,41 +100,41 @@ public class CR_CustomersGridTest extends BaseTest {
         System.out.println("[TEST 1] Customers page ready with 5 uploaded records");
     }
 
-//    /**
-//     * Test 2: Sort AG Grid by company name column
-//    */
-//    @Test(priority = 2, dependsOnMethods = {"testNavigateAndUploadCustomers"}, description = "Sort grid by company name")
-//    public void testSortGridByCompanyName() {
-//        System.out.println("\n[TEST 2] Sorting grid by company name...");
-//
-//        // Click column header to sort ascending
-//        customersVendorsPage.clickColumnHeader("company_name");
-//        List<String> ascValues = customersVendorsPage.getColumnValues("company_name");
-//        System.out.println("[TEST 2] Values after first click (ascending): " + ascValues);
-//
-//        Assert.assertTrue(customersVendorsPage.isSortedAscending(ascValues),
-//                         "Column values should be sorted in ascending order");
-//        System.out.println("[TEST 2] Ascending sort verified");
-//
-//        // Click again to sort descending
-//        customersVendorsPage.clickColumnHeader("company_name");
-//        List<String> descValues = customersVendorsPage.getColumnValues("company_name");
-//        System.out.println("[TEST 2] Values after second click (descending): " + descValues);
-//
-//        Assert.assertTrue(customersVendorsPage.isSortedDescending(descValues),
-//                         "Column values should be sorted in descending order");
-//        System.out.println("[TEST 2] Descending sort verified");
-//
-//        // Click again to reset sort
-//        customersVendorsPage.clickColumnHeader("company_name");
-//
-//        System.out.println("[TEST 2] Sort by company name verified successfully");
-//    }
+    /**
+     * Test 2: Sort AG Grid by company name column
+    */
+    @Test(priority = 2, dependsOnMethods = {"testNavigateAndUploadCustomers"}, description = "Sort grid by company name")
+    public void testSortGridByCompanyName() {
+        System.out.println("\n[TEST 2] Sorting grid by company name...");
+
+        // Click column header to sort ascending
+        customersVendorsPage.clickColumnHeader("company_name");
+        List<String> ascValues = customersVendorsPage.getColumnValues("company_name");
+        System.out.println("[TEST 2] Values after first click (ascending): " + ascValues);
+
+        Assert.assertTrue(customersVendorsPage.isSortedAscending(ascValues),
+                         "Column values should be sorted in ascending order");
+        System.out.println("[TEST 2] Ascending sort verified");
+
+        // Click again to sort descending
+        customersVendorsPage.clickColumnHeader("company_name");
+        List<String> descValues = customersVendorsPage.getColumnValues("company_name");
+        System.out.println("[TEST 2] Values after second click (descending): " + descValues);
+
+        Assert.assertTrue(customersVendorsPage.isSortedDescending(descValues),
+                         "Column values should be sorted in descending order");
+        System.out.println("[TEST 2] Descending sort verified");
+
+        // Click again to reset sort
+        customersVendorsPage.clickColumnHeader("company_name");
+
+        System.out.println("[TEST 2] Sort by company name verified successfully");
+    }
 
     /**
      * Test 3: Filter AG Grid by company name
      */
-    @Test(priority = 3, description = "Filter grid by company name")
+    @Test(priority = 3, dependsOnMethods = {"testNavigateAndUploadCustomers"}, description = "Filter grid by company name")
     public void testFilterGridByCompanyName() {
         System.out.println("\n[TEST 3] Filtering grid by company name...");
 

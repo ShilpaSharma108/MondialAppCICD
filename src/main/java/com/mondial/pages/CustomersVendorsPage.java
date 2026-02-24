@@ -168,31 +168,51 @@ public class CustomersVendorsPage extends BasePage {
 	 */
 	public void deleteAllRecords() {
 		waitForPageLoad();
-		while (container.size() > 0) {
-			try {
-				int countBefore = container.size();
-				WebElement deleteBtn = driver.findElement(
-						By.xpath("//div[@row-id='0']//div[@col-id='delete']"));
-				((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].click();", deleteBtn);
-				// Wait for browser confirmation dialog (cannot use waitForPageLoad while alert is open)
+		int safetyCount = 0;
+		try {
+			while (container.size() > 0 && safetyCount < 100) {
+				safetyCount++;
 				try {
-					new WebDriverWait(driver, Duration.ofSeconds(3)).until(ExpectedConditions.alertIsPresent());
-					driver.switchTo().alert().accept();
+					int rowsBefore = container.size();
+					// Use [1] (first row in document order) instead of [@row-id='0']:
+					// AG Grid row-ids do not reset after deletion, so row-id='0' is gone
+					// after the first delete and subsequent iterations find nothing.
+					WebElement deleteBtn = driver.findElement(
+							By.xpath("//div[@ref='eContainer']//div[@role='row'][1]//div[@col-id='delete']"));
+					((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].click();", deleteBtn);
+					// Wait for browser confirmation dialog
+					try {
+						new WebDriverWait(driver, Duration.ofSeconds(3)).until(ExpectedConditions.alertIsPresent());
+						driver.switchTo().alert().accept();
+					} catch (Exception e) {
+						System.out.println("No confirmation dialog present");
+					}
+					// Wait for success message to appear
+					try {
+						wait.until(ExpectedConditions.visibilityOf(confirmationMsg));
+					} catch (Exception e) {
+						// Message may have appeared and disappeared quickly
+					}
+					waitForConfirmationMessageToDisappear();
+					// Wait for the grid to show one fewer row rather than waiting for full page load.
+					// waitForPageLoad() checks document.readyState which can hang 30s on AJAX pages
+					// and leave the browser in a crashed state on the next container.size() call.
+					try {
+						new WebDriverWait(driver, Duration.ofSeconds(15)).until(d ->
+								driver.findElements(
+										By.xpath("//div[@ref='eContainer']//div[@role='row']")).size() < rowsBefore);
+					} catch (Exception e) {
+						try { Thread.sleep(2000); } catch (InterruptedException ie) { Thread.currentThread().interrupt(); }
+					}
 				} catch (Exception e) {
-					System.out.println("No confirmation dialog present");
+					System.out.println("Delete iteration error: " + e.getMessage());
+					break;
 				}
-				// Wait for success message to appear (confirms server processed the delete)
-				try {
-					wait.until(ExpectedConditions.visibilityOf(confirmationMsg));
-				} catch (Exception e) {
-					// Message may have appeared and disappeared quickly
-				}
-				// Wait for success message to disappear before next delete
-				waitForConfirmationMessageToDisappear();
-				waitForPageLoad();
-			} catch (Exception e) {
-				break;
 			}
+		} catch (Exception e) {
+			// Catches invalid session id or any other fatal WebDriver error thrown by
+			// container.size() in the while condition (outside the inner try-catch).
+			System.out.println("deleteAllRecords interrupted: " + e.getMessage());
 		}
 	}
 
