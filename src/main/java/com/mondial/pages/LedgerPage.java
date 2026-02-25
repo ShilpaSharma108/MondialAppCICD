@@ -94,10 +94,12 @@ public class LedgerPage extends BasePage {
 	 * Click the Add Ledger button
 	 */
 	public void clickAddLedger() {
+		String urlBeforeClick = driver.getCurrentUrl();
 		clickElement(addLedgerBtn);
-		// Clicking Add Ledger triggers a server round-trip (either loading the form
-		// for authorised users, or a redirect back to home for unauthorised ones).
-		// Wait for that navigation to complete before the caller checks the result.
+		// After the click, document.readyState is still "complete" for the old page,
+		// so waitForPageLoad() would return immediately before navigation starts.
+		// Wait for the URL to actually change first, then wait for the new page to load.
+		wait.until(d -> !d.getCurrentUrl().equals(urlBeforeClick));
 		waitForPageLoad();
 	}
 
