@@ -16,4 +16,10 @@
         </classes>
     </test>
 
+    <test name="Ledger Unauthorised Access Tests">
+        <classes>
+            <class name="com.mondial.tests.enterprise.ES_LedgerUnauthorisedAccessTest"/>
+        </classes>
+    </test>
+
 </suite>
