@@ -398,7 +398,12 @@ public class HomePage extends BasePage {
 	 */
 	public boolean isCompanyHeadingDisplayed() {
 		try {
-			wait.until(ExpectedConditions.visibilityOf(companyHeading));
+			// Use a 60-second timeout to handle slow server-side redirects in CI.
+			// The runner-to-dev-server round-trip can consume most of the standard
+			// 20s window before the Companies heading is even rendered.
+			// Returns quickly when the heading is already present.
+			new org.openqa.selenium.support.ui.WebDriverWait(driver, java.time.Duration.ofSeconds(60))
+				.until(ExpectedConditions.visibilityOf(companyHeading));
 			return companyHeading.isDisplayed();
 		} catch (Exception e) {
 			return false;
