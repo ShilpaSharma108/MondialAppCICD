@@ -74,7 +74,13 @@ public class DriverManager {
         driver.get().manage().timeouts().pageLoadTimeout(
             Duration.ofSeconds(Integer.parseInt(config.getProperty("pageLoadTimeout")))
         );
-        driver.get().manage().window().maximize();
+        // In headless mode maximize() uses the virtual display size (often 1024x768 in CI),
+        // which collapses responsive sidebars. Force a fixed desktop size instead.
+        if (headless) {
+            driver.get().manage().window().setSize(new org.openqa.selenium.Dimension(1920, 1080));
+        } else {
+            driver.get().manage().window().maximize();
+        }
     }
 
     private static void setupChrome(boolean headless, String os) {

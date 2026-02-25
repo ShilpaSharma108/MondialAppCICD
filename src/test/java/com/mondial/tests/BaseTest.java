@@ -62,9 +62,19 @@ public class BaseTest {
         // Navigate to application
         driver.get(baseUrl);
         
-        // Maximize window
-        driver.manage().window().maximize();
-        System.out.println("✓ Browser window maximized");
+        // In headless mode maximize() uses the virtual display size (often 1024x768 in CI),
+        // which collapses responsive sidebars. Force a fixed desktop size instead.
+        String headlessProp = System.getProperty("headless");
+        if (headlessProp == null || headlessProp.isEmpty()) {
+            headlessProp = config.getProperty("headless");
+        }
+        if (Boolean.parseBoolean(headlessProp)) {
+            driver.manage().window().setSize(new org.openqa.selenium.Dimension(1920, 1080));
+            System.out.println("✓ Browser window set to 1920x1080 (headless)");
+        } else {
+            driver.manage().window().maximize();
+            System.out.println("✓ Browser window maximized");
+        }
         
         // Print test environment info
         printTestEnvironment(browser, baseUrl);
