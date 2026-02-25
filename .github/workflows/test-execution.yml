@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      suite:
+        description: 'TestNG suite XML file (relative to src/test/resources/)'
+        required: false
+        default: 'testng.xml'
 
 jobs:
   test:
@@ -29,6 +34,7 @@ jobs:
       - name: Run Tests
         run: |
           mvn clean test -Pci \
+            -DsuiteXmlFile=src/test/resources/${{ github.event.inputs.suite || 'testng.xml' }} \
             -DvalidUsername=${{ secrets.VALID_USERNAME }} \
             -DvalidPassword=${{ secrets.VALID_PASSWORD }}
 

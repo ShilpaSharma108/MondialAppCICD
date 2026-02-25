@@ -183,16 +183,30 @@ public class HomePage extends BasePage {
 	// ============================================
 	// USER MANAGEMENT METHODS
 	// ============================================
-	
+
+	/**
+	 * Navigate to Enterprise Setup > Users page reliably in headless CI.
+	 * Scrolls the sidebar link into view, performs a real click (not JS fallback),
+	 * then waits for the Users link to be clickable via a fresh By-locator poll.
+	 */
+	private void navigateToUsersPage() {
+		waitForPageLoad();
+		scrollToElement(enterpriseSetup);
+		wait.until(ExpectedConditions.elementToBeClickable(enterpriseSetup));
+		enterpriseSetup.click();
+		wait.until(ExpectedConditions.elementToBeClickable(
+			By.xpath("//li//a[contains(text(), 'Users')]")));
+		users.click();
+		waitForPageLoad();
+	}
+
 	/**
 	 * Create a new user and assign role
 	 * @param emailId - Email ID of the new user
 	 * @param password - Password for the new user
 	 */
 	public void createUser(String emailId, String password) {
-		waitForPageLoad();
-		clickElement(enterpriseSetup);
-		clickElement(users);
+		navigateToUsersPage();
 		clickElement(addUserButton);
 		wait.until(ExpectedConditions.visibilityOf(newUserEmail));
 		newUserEmail.clear();
@@ -216,9 +230,7 @@ public class HomePage extends BasePage {
 	 * @param password - Password for the user
 	 */
 	public void createUserWithExistingEmail(String emailId, String password) {
-		waitForPageLoad();
-		clickElement(enterpriseSetup);
-		clickElement(users);
+		navigateToUsersPage();
 		clickElement(addUserButton);
 		wait.until(ExpectedConditions.visibilityOf(newUserEmail));
 		newUserEmail.clear();
@@ -257,11 +269,7 @@ public class HomePage extends BasePage {
 	 * @param userName - Username/Email of the user to delete
 	 */
 	public void deleteUser(String userName) {
-		waitForPageLoad();
-		clickElement(enterpriseSetup);
-		wait.until(ExpectedConditions.visibilityOf(users));
-		clickElement(users);
-		waitForPageLoad();
+		navigateToUsersPage();
 		// Wait until we're on the Users page
 		wait.until(d -> {
 			try {
@@ -322,16 +330,11 @@ public class HomePage extends BasePage {
 	 * @return Number of users deleted
 	 */
 	public int deleteAllUsersWithPrefix(String prefix) {
-		waitForPageLoad();
-		clickElement(enterpriseSetup);
-		wait.until(ExpectedConditions.visibilityOf(users));
-		clickElement(users);
-		waitForPageLoad();
-		// Wait until we're no longer on the Companies page
+		navigateToUsersPage();
+		// Wait until we're on the Users page
 		wait.until(d -> {
 			try {
-				String url = d.getCurrentUrl();
-				return url.contains("user");
+				return d.getCurrentUrl().contains("user");
 			} catch (Exception e) {
 				return false;
 			}
