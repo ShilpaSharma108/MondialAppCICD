@@ -96,6 +96,7 @@ public class CR_COACrudTest extends BaseTest {
 
         coaPage.clickAddGLAccountBtn();
         coaPage.createNewGLAccount(acNumber);
+       
         waitForPageLoad();
 
         Assert.assertTrue(coaPage.isAddGLAccountBtnDisplayed(),
@@ -155,6 +156,7 @@ public class CR_COACrudTest extends BaseTest {
 
         // Refresh page to ensure clean state after validation tests
         driver.navigate().refresh();
+        coaPage.spinnerInvisibility();
         waitForPageLoad();
 
         coaPage.navigateToEdit(acNumber);
@@ -197,7 +199,7 @@ public class CR_COACrudTest extends BaseTest {
         // Refresh page so the AG Grid reloads without the deleted record
         driver.navigate().refresh();
         waitForPageLoad();
-
+        
         Assert.assertFalse(coaPage.verifyGLAccount(acNumber),
                           "Deleted GL Account should no longer appear in the table");
 
@@ -214,4 +216,6 @@ public class CR_COACrudTest extends BaseTest {
             e.printStackTrace();
         }
     }
+    
+    
 }

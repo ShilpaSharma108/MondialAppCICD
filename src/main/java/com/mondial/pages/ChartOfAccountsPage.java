@@ -91,6 +91,9 @@ public class ChartOfAccountsPage extends BasePage {
 	@FindBy(xpath = "//a[contains(text(),'Download Table as CSV')]")
 	private WebElement downloadTable;
 
+	@FindBy(xpath = "//div[@class='spinner']")
+	private WebElement pageSpinner;
+
 	// Constructor
 	public ChartOfAccountsPage(WebDriver driver) {
 		super(driver);
@@ -142,7 +145,7 @@ public class ChartOfAccountsPage extends BasePage {
 			if (container.get(i).getAttribute("innerText").contains(name)) {
 				WebElement editLink = driver.findElement(By.xpath(
 						"//div[@ref='eContainer']//div[@role='row'][.//*[contains(text(),'"
-						+ name + "')]]//a[contains(text(),'Edit')]"));
+						+ name + "')]]//div[contains(text(),'Edit')]"));
 				scrollToElement(editLink);
 				wait.until(ExpectedConditions.elementToBeClickable(editLink));
 				editLink.click();
@@ -186,6 +189,7 @@ public class ChartOfAccountsPage extends BasePage {
 		wait.until(ExpectedConditions.elementToBeClickable(currency));
 		new Select(currency).selectByVisibleText("USD");
 		clickElement(createBtn);
+		wait.until(ExpectedConditions.invisibilityOf(pageSpinner));
 		waitForPageLoad();
 	}
 
@@ -335,8 +339,13 @@ public class ChartOfAccountsPage extends BasePage {
 	 */
 	public void clickCancelAndWaitForListing() {
 		clickElement(cancelBtn);
+		spinnerInvisibility();
 		wait.until(ExpectedConditions.visibilityOf(addGLAccountBtn));
 	}
+	
+	public void spinnerInvisibility() {
+    	wait.until(ExpectedConditions.invisibilityOf(pageSpinner));
+        }
 
 	// ============================================
 	// CSV UPLOAD / DOWNLOAD METHODS
