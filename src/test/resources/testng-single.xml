@@ -10,9 +10,9 @@
     <parameter name="os" value="ubuntu"/>
     <parameter name="headless" value="true"/>
 
-    <test name="User Creation Tests">
+    <test name="Chart of Accounts CRUD Tests">
         <classes>
-            <class name="com.mondial.tests.login.UserCreationTest"/>
+            <class name="com.mondial.tests.company.CR_COACrudTest"/>
         </classes>
     </test>
 
