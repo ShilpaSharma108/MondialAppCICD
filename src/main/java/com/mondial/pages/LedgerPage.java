@@ -67,9 +67,12 @@ public class LedgerPage extends BasePage {
 	 */
 	public void navigateToLedgerPage() {
 		waitForPageLoad();
-		clickElement(enterpriseSetup);
-		wait.until(ExpectedConditions.visibilityOf(ledgerMenu));
-		clickElement(ledgerMenu);
+		scrollToElement(enterpriseSetup);
+		wait.until(ExpectedConditions.elementToBeClickable(enterpriseSetup));
+		enterpriseSetup.click();
+		wait.until(ExpectedConditions.elementToBeClickable(
+			By.xpath("//a[contains(text(),'Ledgers')]")));
+		ledgerMenu.click();
 		waitForPageLoad();
 		wait.until(ExpectedConditions.visibilityOf(addLedgerBtn));
 	}
@@ -92,6 +95,10 @@ public class LedgerPage extends BasePage {
 	 */
 	public void clickAddLedger() {
 		clickElement(addLedgerBtn);
+		// Clicking Add Ledger triggers a server round-trip (either loading the form
+		// for authorised users, or a redirect back to home for unauthorised ones).
+		// Wait for that navigation to complete before the caller checks the result.
+		waitForPageLoad();
 	}
 
 	/**
