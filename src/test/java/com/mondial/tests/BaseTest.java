@@ -34,7 +34,7 @@ public class BaseTest {
      * Setup method executed before each test class
      * Initializes browser, navigates to base URL, maximizes window
      */
-    @BeforeClass
+    @BeforeClass(alwaysRun = true)
     public void setUp() {
         System.out.println("\n========================================");
         System.out.println("Starting Test Suite Setup");
@@ -61,21 +61,7 @@ public class BaseTest {
         
         // Navigate to application
         driver.get(baseUrl);
-        
-        // In headless mode maximize() uses the virtual display size (often 1024x768 in CI),
-        // which collapses responsive sidebars. Force a fixed desktop size instead.
-        String headlessProp = System.getProperty("headless");
-        if (headlessProp == null || headlessProp.isEmpty()) {
-            headlessProp = config.getProperty("headless");
-        }
-        if (Boolean.parseBoolean(headlessProp)) {
-            driver.manage().window().setSize(new org.openqa.selenium.Dimension(1920, 1080));
-            System.out.println("✓ Browser window set to 1920x1080 (headless)");
-        } else {
-            driver.manage().window().maximize();
-            System.out.println("✓ Browser window maximized");
-        }
-        
+
         // Print test environment info
         printTestEnvironment(browser, baseUrl);
         
@@ -88,7 +74,7 @@ public class BaseTest {
      * Teardown method executed after each test class
      * Closes browser and cleans up resources
      */
-    @AfterClass
+    @AfterClass(alwaysRun = true)
     public void tearDown() {
         System.out.println("\n========================================");
         System.out.println("Starting Test Suite Teardown");
@@ -97,6 +83,7 @@ public class BaseTest {
         if (driver != null) {
             System.out.println("Closing browser...");
             DriverManager.quitDriver();
+            driver = null;
             System.out.println("✓ Browser closed successfully");
         }
         
@@ -110,13 +97,14 @@ public class BaseTest {
      * Captures screenshot on test failure
      * @param result TestNG test result object
      */
-    @AfterMethod
+    @AfterMethod(alwaysRun = true)
     public void afterMethod(ITestResult result) {
         String testName = result.getName();
         
         if (result.getStatus() == ITestResult.FAILURE) {
             System.out.println("\n✗ TEST FAILED: " + testName);
-            System.out.println("Failure Reason: " + result.getThrowable().getMessage());
+            String failureMsg = result.getThrowable() != null ? result.getThrowable().getMessage() : "Unknown failure";
+            System.out.println("Failure Reason: " + failureMsg);
             captureScreenshot(testName);
         } else if (result.getStatus() == ITestResult.SUCCESS) {
             System.out.println("\n✓ TEST PASSED: " + testName);
@@ -130,7 +118,7 @@ public class BaseTest {
      * Logs test start information
      * @param result TestNG test result object
      */
-    @BeforeMethod
+    @BeforeMethod(alwaysRun = true)
     public void beforeMethod(java.lang.reflect.Method method) {
         System.out.println("\n----------------------------------------");
         System.out.println("Starting Test: " + method.getName());
@@ -183,13 +171,17 @@ public class BaseTest {
      * @param testName Name of the test (used for screenshot filename)
      */
     protected void captureScreenshot(String testName) {
+        if (driver == null) {
+            System.out.println("✗ Cannot capture screenshot: driver is null");
+            return;
+        }
         try {
             // Create screenshots directory if it doesn't exist
             File screenshotDir = new File(SCREENSHOT_DIR);
             if (!screenshotDir.exists()) {
                 screenshotDir.mkdirs();
             }
-            
+
             // Take screenshot
             TakesScreenshot ts = (TakesScreenshot) driver;
             File source = ts.getScreenshotAs(OutputType.FILE);
@@ -206,6 +198,8 @@ public class BaseTest {
             System.out.println("✓ Screenshot captured: " + destination);
         } catch (IOException e) {
             System.out.println("✗ Failed to capture screenshot: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("✗ Failed to capture screenshot (session issue): " + e.getMessage());
         }
     }
     

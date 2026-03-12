@@ -110,7 +110,8 @@ public class DriverManager {
         prefs.put("download.prompt_for_download", false);
         prefs.put("download.directory_upgrade", true);
         options.setExperimentalOption("prefs", prefs);
-        
+        options.setPageLoadStrategy(org.openqa.selenium.PageLoadStrategy.NONE);
+
         // OS specific options
         if (os.equalsIgnoreCase("ubuntu")) {
             options.addArguments("--disable-setuid-sandbox");

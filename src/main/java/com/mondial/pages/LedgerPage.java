@@ -1,9 +1,11 @@
 package com.mondial.pages;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -172,6 +174,78 @@ public class LedgerPage extends BasePage {
 		ledgerName.sendKeys(updatedName);
 		clickElement(submitBtn);
 		return updatedName;
+	}
+
+	/**
+	 * Select all unchecked transaction type checkboxes on the current edit form
+	 * (skips already-checked ones and "Source System")
+	 * @return List of newly selected transaction category names
+	 */
+	// Checks: (1) DOM .checked property, (2) HTML checked attribute,
+	// (3) any ancestor element (up to the enclosing form) carrying a 'checked' CSS class —
+	// this covers iCheck / jQuery-styled / Angular-managed checkboxes where the visual
+	// checked state is stored as a class on a wrapper element rather than on the input.
+	private static final String IS_CHECKED_JS =
+		"var inp = arguments[0];" +
+		"if (inp.checked) return true;" +
+		"if (inp.hasAttribute('checked')) return true;" +
+		"var el = inp.parentElement;" +
+		"for (var i = 0; i < 5 && el && el.tagName !== 'FORM' && el.tagName !== 'BODY'; i++) {" +
+		"  if ((el.className || '').split(' ').indexOf('checked') !== -1) return true;" +
+		"  el = el.parentElement;" +
+		"}" +
+		"return false;";
+
+	public List<String> selectAdditionalTxnTypes() {
+		wait.until(ExpectedConditions.visibilityOfAllElements(txnTypeList));
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+		List<String> newlySelected = new ArrayList<>();
+		for (WebElement div : txnTypeList) {
+			WebElement checkbox = div.findElement(By.xpath(".//input[@type='checkbox']"));
+			String label = div.getAttribute("innerText").trim();
+			boolean isCheckedBefore = (Boolean) js.executeScript(IS_CHECKED_JS, checkbox);
+			if (!isCheckedBefore && !label.contains("Source System")) {
+				scrollToElement(div);
+				div.click();
+				// Verify state after the click. If the checkbox is still not detected as
+				// checked, our detection is unreliable for this element and the click likely
+				// toggled it OFF (it was already on). Click again to restore original state.
+				boolean isCheckedAfter = (Boolean) js.executeScript(IS_CHECKED_JS, checkbox);
+				if (isCheckedAfter) {
+					newlySelected.add(label);
+				} else {
+					div.click(); // restore
+				}
+			}
+		}
+		return newlySelected;
+	}
+
+	/**
+	 * Get the names of all currently checked transaction type categories on the form
+	 * @return List of checked category label strings
+	 */
+	public List<String> getCheckedTxnTypeNames() {
+		wait.until(ExpectedConditions.visibilityOfAllElements(txnTypeList));
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+		List<String> checkedNames = new ArrayList<>();
+		for (WebElement div : txnTypeList) {
+			WebElement checkbox = div.findElement(By.xpath(".//input[@type='checkbox']"));
+			boolean isChecked = (Boolean) js.executeScript(IS_CHECKED_JS, checkbox);
+			if (isChecked) {
+				checkedNames.add(div.getAttribute("innerText").trim());
+			}
+		}
+		return checkedNames;
+	}
+
+	/**
+	 * Click the submit button and wait for the listing page to be visible
+	 */
+	public void submitAndWaitForListing() {
+		clickElement(submitBtn);
+		waitForPageLoad();
+		wait.until(ExpectedConditions.visibilityOf(addLedgerBtn));
 	}
 
 	/**

@@ -7,18 +7,49 @@
     </listeners>
 
     <parameter name="browser" value="chrome"/>
-    <parameter name="os" value="ubuntu"/>
-    <parameter name="headless" value="true"/>
+    <parameter name="os" value="windows"/>
+    <parameter name="headless" value="false"/>
 
-    <test name="Chart of Accounts CRUD Tests">
+    <!-- ==================== FAILED TESTS ==================== -->
+    <test name="User Creation Test">
         <classes>
-            <class name="com.mondial.tests.company.CR_COACrudTest"/>
+            <class name="com.mondial.tests.login.UserCreationTest"/>
         </classes>
     </test>
 
-    <test name="Ledger Unauthorised Access Tests">
+    <test name="Customers Test">
         <classes>
-            <class name="com.mondial.tests.enterprise.ES_LedgerUnauthorisedAccessTest"/>
+            <class name="com.mondial.tests.company.CR_CustomersTest"/>
+        </classes>
+    </test>
+
+    <test name="Customers Grid Test">
+        <classes>
+            <class name="com.mondial.tests.company.CR_CustomersGridTest"/>
+        </classes>
+    </test>
+
+    <test name="Vendors Test">
+        <classes>
+            <class name="com.mondial.tests.company.CR_VendorsTest"/>
+        </classes>
+    </test>
+
+    <test name="Vendors Grid Test">
+        <classes>
+            <class name="com.mondial.tests.company.CR_VendorsGridTest"/>
+        </classes>
+    </test>
+
+    <test name="Integration Ledger Templated Report Test">
+        <classes>
+            <class name="com.mondial.tests.integrations.IntegrationLedger_TemplatedReportTest"/>
+        </classes>
+    </test>
+
+    <test name="Zendesk Test">
+        <classes>
+            <class name="com.mondial.tests.integrations.ZendeskTest"/>
         </classes>
     </test>
 

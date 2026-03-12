@@ -2,6 +2,7 @@ package com.mondial.tests.enterprise;
 
 import com.mondial.tests.BaseTest;
 
+import java.util.List;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -120,12 +121,57 @@ public class ES_LedgerCRUDTest extends BaseTest {
     }
 
     /**
-     * Test 4: Edit the previously created Ledger
+     * Test 4: Edit transaction categories on the Ledger
+     * Selects additional (unchecked) transaction category checkboxes, saves,
+     * then re-opens edit to verify all newly selected categories are persisted
+     */
+    @Test(priority = 4, description = "Verify editing transaction categories saves successfully")
+    public void testEditLedgerTransactionCategories() {
+        System.out.println("\n[TEST 4] Editing transaction categories for Ledger: " + ledgerName);
+
+        // Defensive setup: navigate to listing and create the ledger if it doesn't exist
+        // (no-op when running as part of the full chain; enables standalone execution)
+        ledgerPage.navigateToLedgerPage();
+        if (!ledgerPage.verifyRecordPresent(ledgerName)) {
+            System.out.println("[TEST 4] Ledger not found, creating: " + ledgerName);
+            ledgerPage.createLedger(ledgerName);
+            ledgerPage.verifyRecordPresent(ledgerName); // waits for listing to reload
+        }
+
+        ledgerPage.navigateToEdit(ledgerName);
+
+        Assert.assertTrue(ledgerPage.isSubmitBtnDisplayed(),
+                         "Submit button should be displayed on edit page");
+
+        List<String> additionalCategories = ledgerPage.selectAdditionalTxnTypes();
+
+        Assert.assertFalse(additionalCategories.isEmpty(),
+                          "At least one additional transaction category should be available to select");
+
+        System.out.println("[TEST 4] Newly selected transaction categories: " + additionalCategories);
+
+        ledgerPage.submitAndWaitForListing();
+
+        // Re-open edit to verify the newly selected categories were saved
+        ledgerPage.navigateToEdit(ledgerName);
+
+        List<String> checkedCategories = ledgerPage.getCheckedTxnTypeNames();
+
+        Assert.assertTrue(checkedCategories.containsAll(additionalCategories),
+                         "All newly selected transaction categories should be saved and checked");
+
+        ledgerPage.clickCancelAndWaitForListing();
+
+        System.out.println("[TEST 4] Transaction categories updated and verified successfully");
+    }
+
+    /**
+     * Test 5: Edit the previously created Ledger
      * Navigates to edit, cancels, then edits again and renames
      */
-    @Test(priority = 4, dependsOnMethods = {"testCreateDuplicateLedger"}, description = "Verify Edit Ledger functionality")
+    @Test(priority = 5, dependsOnMethods = {"testEditLedgerTransactionCategories"}, description = "Verify Edit Ledger functionality")
     public void testEditLedger() {
-        System.out.println("\n[TEST 3] Editing Ledger: " + ledgerName);
+        System.out.println("\n[TEST 5] Editing Ledger: " + ledgerName);
 
         ledgerPage.navigateToEdit(ledgerName);
 
@@ -141,14 +187,14 @@ public class ES_LedgerCRUDTest extends BaseTest {
         Assert.assertTrue(ledgerPage.verifyRecordPresent(ledgerName),
                          "Updated ledger name should appear in the table");
 
-        System.out.println("[TEST 3] Ledger updated to: " + ledgerName);
+        System.out.println("[TEST 5] Ledger updated to: " + ledgerName);
     }
 
     /**
-     * Test 4: Delete the Ledger
+     * Test 6: Delete the Ledger
      * Deletes the ledger and verifies it no longer appears in the table
      */
-    @Test(priority = 5, dependsOnMethods = {"testEditLedger"}, description = "Verify user is able to Delete Unused Ledger")
+    @Test(priority = 6, dependsOnMethods = {"testEditLedger"}, description = "Verify user is able to Delete Unused Ledger")
     public void testDeleteLedger() {
         System.out.println("\n[TEST 4] Deleting Ledger: " + ledgerName);
 

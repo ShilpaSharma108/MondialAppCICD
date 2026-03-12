@@ -10,6 +10,7 @@
     <parameter name="os" value="windows"/>
     <parameter name="headless" value="false"/>
 
+    <!-- ==================== LOGIN ==================== -->
     <test name="Login Tests">
         <classes>
             <class name="com.mondial.tests.login.LoginTest"/>
@@ -22,66 +23,7 @@
         </classes>
     </test>
 
-    <test name="Zendesk Tests">
-        <classes>
-            <class name="com.mondial.tests.integrations.ZendeskTest"/>
-        </classes>
-    </test>
-
-    <test name="Ledger Report Writer Integration Tests">
-        <classes>
-            <class name="com.mondial.tests.integrations.IntegrationLedger_ReportWriterTest"/>
-        </classes>
-    </test>
-
-    <test name="Ledger Template Report Integration Tests">
-        <classes>
-            <class name="com.mondial.tests.integrations.IntegrationLedger_TemplatedReportTest"/>
-        </classes>
-    </test>
-
-    <test name="Ledger CRUD Tests">
-        <classes>
-            <class name="com.mondial.tests.enterprise.ES_LedgerCRUDTest"/>
-        </classes>
-    </test>
-
-    <test name="Ledger Unauthorised Access Tests">
-        <classes>
-            <class name="com.mondial.tests.enterprise.ES_LedgerUnauthorisedAccessTest"/>
-        </classes>
-    </test>
-
-    <test name="Natural Account Set CRUD Tests">
-        <classes>
-            <class name="com.mondial.tests.company.CR_NaturalAccCRUDTest"/>
-        </classes>
-    </test>
-
-    <test name="Reporting Segment CRUD Tests">
-        <classes>
-            <class name="com.mondial.tests.company.CR_SegmentCRUDTest"/>
-        </classes>
-    </test>
-
-    <test name=" Reporting Segment Validation Tests">
-        <classes>
-            <class name="com.mondial.tests.company.CR_SegmentValidationTest"/>
-        </classes>
-    </test>
-
-    <test name="Reporting Segment CSV Template Tests">
-        <classes>
-            <class name="com.mondial.tests.company.CR_SegmentCSVTemplateTest"/>
-        </classes>
-    </test>
-
-    <test name="Reporting Segment Options CRUD Tests">
-        <classes>
-            <class name="com.mondial.tests.company.CR_SegmentOptionsAllTest"/>
-        </classes>
-    </test>
-
+    <!-- ==================== COMPANY - COA ==================== -->
     <test name="Chart of Accounts CRUD Tests">
         <classes>
             <class name="com.mondial.tests.company.CR_COACrudTest"/>
@@ -94,7 +36,40 @@
         </classes>
     </test>
 
-<!--<test name="Customers CSV Upload Tests">-->
+    <!-- ==================== COMPANY - NATURAL ACCOUNTS ==================== -->
+    <test name="Natural Account Set CRUD Tests">
+        <classes>
+            <class name="com.mondial.tests.company.CR_NaturalAccCRUDTest"/>
+        </classes>
+    </test>
+
+    <!-- ==================== COMPANY - SEGMENTS ==================== -->
+    <test name="Reporting Segment CRUD Tests">
+        <classes>
+            <class name="com.mondial.tests.company.CR_SegmentCRUDTest"/>
+        </classes>
+    </test>
+
+    <test name="Reporting Segment Options CRUD Tests">
+        <classes>
+            <class name="com.mondial.tests.company.CR_SegmentOptionsAllTest"/>
+        </classes>
+    </test>
+
+    <test name="Reporting Segment Validation Tests">
+        <classes>
+            <class name="com.mondial.tests.company.CR_SegmentValidationTest"/>
+        </classes>
+    </test>
+
+    <test name="Reporting Segment CSV Template Tests">
+        <classes>
+            <class name="com.mondial.tests.company.CR_SegmentCSVTemplateTest"/>
+        </classes>
+    </test>
+
+    <!-- ==================== COMPANY - CUSTOMERS ==================== -->
+<!--    <test name="Customers Tests">-->
 <!--        <classes>-->
 <!--            <class name="com.mondial.tests.company.CR_CustomersTest"/>-->
 <!--        </classes>-->
@@ -106,7 +81,8 @@
 <!--        </classes>-->
 <!--    </test>-->
 
-<!--    <test name="Vendors CSV Upload Tests">-->
+    <!-- ==================== COMPANY - VENDORS ==================== -->
+<!--    <test name="Vendors Tests">-->
 <!--        <classes>-->
 <!--            <class name="com.mondial.tests.company.CR_VendorsTest"/>-->
 <!--        </classes>-->
@@ -117,5 +93,188 @@
 <!--            <class name="com.mondial.tests.company.CR_VendorsGridTest"/>-->
 <!--        </classes>-->
 <!--    </test>-->
+
+    <!-- ==================== ENTERPRISE - LEDGER ==================== -->
+    <test name="Ledger CRUD Tests">
+        <classes>
+            <class name="com.mondial.tests.enterprise.ES_LedgerCRUDTest"/>
+        </classes>
+    </test>
+
+    <test name="Ledger Unauthorised Access Tests">
+        <classes>
+            <class name="com.mondial.tests.enterprise.ES_LedgerUnauthorisedAccessTest"/>
+        </classes>
+    </test>
+
+    <!-- ==================== ENTERPRISE - ALTERNATE ACCOUNTS ==================== -->
+    <test name="Alternate Account CRUD Tests">
+        <classes>
+            <class name="com.mondial.tests.enterprise.ES_AA_CRUDTest"/>
+        </classes>
+    </test>
+
+    <test name="Alternate Account Copy From Company Tests">
+        <classes>
+            <class name="com.mondial.tests.enterprise.ES_AA_CopyFromCompanyTest"/>
+        </classes>
+    </test>
+
+    <test name="Alternate Account CSV Upload Tests">
+        <classes>
+            <class name="com.mondial.tests.enterprise.ES_AA_CSVUploadTest"/>
+        </classes>
+    </test>
+
+    <!-- ==================== REPORTS - ROW FORMAT ==================== -->
+    <test name="Row Format CRUD Tests">
+        <classes>
+            <class name="com.mondial.tests.reports.RowFormat_CRUD"/>
+        </classes>
+    </test>
+
+    <test name="Copy Row Format Tests">
+        <classes>
+            <class name="com.mondial.tests.reports.CopyRowFormat"/>
+        </classes>
+    </test>
+
+    <test name="Row Format Insert Row CRUD Tests">
+        <classes>
+            <class name="com.mondial.tests.reports.RowFormat_InsertRow_CRUD"/>
+        </classes>
+    </test>
+
+    <test name="Row Format Unauthorised User Tests">
+        <classes>
+            <class name="com.mondial.tests.reports.AddingRowFormat_UnauthorisedUser"/>
+        </classes>
+    </test>
+
+    <!-- ==================== REPORTS - COLUMN LAYOUT ==================== -->
+    <test name="Column Layout CRUD Tests">
+        <classes>
+            <class name="com.mondial.tests.reports.ColumnLayout_CRUD"/>
+        </classes>
+    </test>
+
+    <test name="Copy Column Layout Tests">
+        <classes>
+            <class name="com.mondial.tests.reports.CopyColumnLayout"/>
+        </classes>
+    </test>
+
+    <test name="Column Layout Insert Column Tests">
+        <classes>
+            <class name="com.mondial.tests.reports.ColumnLayout_InsertColumn"/>
+        </classes>
+    </test>
+
+    <!-- ==================== REPORTS - FORMAT CODES ==================== -->
+    <test name="Format Code CRUD Tests">
+        <classes>
+            <class name="com.mondial.tests.reports.FormatCode_CRUD"/>
+        </classes>
+    </test>
+
+    <test name="Format Code Checkbox Selection Tests">
+        <classes>
+            <class name="com.mondial.tests.reports.FormatCode_CheckboxSelection"/>
+        </classes>
+    </test>
+
+    <!-- ==================== REPORTS - REPORT HEADER ==================== -->
+    <test name="Report Header CRUD Tests">
+        <classes>
+            <class name="com.mondial.tests.reports.ReportHeader_CRUD"/>
+        </classes>
+    </test>
+
+    <test name="Report Header Create RH Row Tests">
+        <classes>
+            <class name="com.mondial.tests.reports.ReportHeader_CreateRHRow"/>
+        </classes>
+    </test>
+
+    <test name="Error Message For Header Deletion Tests">
+        <classes>
+            <class name="com.mondial.tests.reports.ErrorMessageForHeaderDeletion"/>
+        </classes>
+    </test>
+
+    <!-- ==================== REPORTS - REPORT FOOTER ==================== -->
+    <test name="Report Footer CRUD Tests">
+        <classes>
+            <class name="com.mondial.tests.reports.ReportFooter_CRUD"/>
+        </classes>
+    </test>
+
+    <test name="Report Footer Create RF Row Tests">
+        <classes>
+            <class name="com.mondial.tests.reports.ReportFooter_CreateRFRow"/>
+        </classes>
+    </test>
+
+    <!-- ==================== REPORTS - REPORT GENERATION ==================== -->
+    <test name="Verify Report Generation Profit and Loss Tests">
+        <classes>
+            <class name="com.mondial.tests.reports.VerifyReportGeneration_PL"/>
+        </classes>
+    </test>
+
+    <test name="Verify Report Generation Balance Sheet Tests">
+        <classes>
+            <class name="com.mondial.tests.reports.VerifyReportGeneration_BS"/>
+        </classes>
+    </test>
+
+    <test name="Verify Error Messages For Invalid Details Tests">
+        <classes>
+            <class name="com.mondial.tests.reports.VerifyErrorMessagesforInvalidDetails"/>
+        </classes>
+    </test>
+
+    <!-- ==================== INTEGRATIONS ==================== -->
+    <test name="Ledger Report Writer Integration Tests">
+        <classes>
+            <class name="com.mondial.tests.integrations.IntegrationLedger_ReportWriterTest"/>
+        </classes>
+    </test>
+
+    <test name="Ledger Template Report Integration Tests">
+        <classes>
+            <class name="com.mondial.tests.integrations.IntegrationLedger_TemplatedReportTest"/>
+        </classes>
+    </test>
+
+    <test name="Integration Row Format In Report Tests">
+        <classes>
+            <class name="com.mondial.tests.integrations.IntegrationRowFormatInReport"/>
+        </classes>
+    </test>
+
+    <test name="Integration Column Layout In Report Tests">
+        <classes>
+            <class name="com.mondial.tests.integrations.IntegrationColumnLayoutInReport"/>
+        </classes>
+    </test>
+
+    <test name="Integration Report Header In Report Tests">
+        <classes>
+            <class name="com.mondial.tests.integrations.IntegrationReportHeaderInReport"/>
+        </classes>
+    </test>
+
+    <test name="Integration Report Footer In Report Tests">
+        <classes>
+            <class name="com.mondial.tests.integrations.IntegrationReportFoorterInReport"/>
+        </classes>
+    </test>
+
+    <test name="Zendesk Tests">
+        <classes>
+            <class name="com.mondial.tests.integrations.ZendeskTest"/>
+        </classes>
+    </test>
 
 </suite>

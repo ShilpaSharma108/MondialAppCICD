@@ -81,7 +81,7 @@ public class BasePage {
         }
     }
 
-    protected void waitForPageLoad() {
+    public void waitForPageLoad() {
         try {
             int pageLoadTimeout = Integer.parseInt(config.getProperty("pageLoadTimeout"));
             new WebDriverWait(driver, Duration.ofSeconds(pageLoadTimeout)).until(
