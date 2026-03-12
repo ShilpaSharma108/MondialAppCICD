@@ -259,6 +259,10 @@ public class RowFormat extends BasePage {
         driver.switchTo().alert().accept();
         waitForPageLoad();
         wait.until(ExpectedConditions.elementToBeClickable(createReportRowBtn));
+        // Wait for the AG Grid to remove the deleted row
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(
+                "//div[@ref='eContainer'][@role='rowgroup']//div[@row-index]"
+                + "//div[contains(text(),'" + code + "')]")));
     }
 
     /**
