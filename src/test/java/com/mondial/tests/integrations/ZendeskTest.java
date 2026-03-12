@@ -72,6 +72,10 @@ public class ZendeskTest extends BaseTest {
         Assert.assertTrue(switchedToNewWindow,
                          "A new window should open after clicking Help icon");
 
+        // Wait for the Zendesk page URL to load in the new window
+        new WebDriverWait(driver, Duration.ofSeconds(30)).until(
+                d -> d.getCurrentUrl().contains("zendesk") || d.getCurrentUrl().contains("support"));
+
         String currentUrl = driver.getCurrentUrl();
         System.out.println("[TEST] New window URL: " + currentUrl);
         Assert.assertTrue(currentUrl.contains("zendesk"),

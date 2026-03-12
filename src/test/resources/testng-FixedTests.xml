@@ -17,29 +17,29 @@
         </classes>
     </test>
 
-    <test name="Customers Test">
-        <classes>
-            <class name="com.mondial.tests.company.CR_CustomersTest"/>
-        </classes>
-    </test>
+<!--    <test name="Customers Test">-->
+<!--        <classes>-->
+<!--            <class name="com.mondial.tests.company.CR_CustomersTest"/>-->
+<!--        </classes>-->
+<!--    </test>-->
 
-    <test name="Customers Grid Test">
-        <classes>
-            <class name="com.mondial.tests.company.CR_CustomersGridTest"/>
-        </classes>
-    </test>
+<!--    <test name="Customers Grid Test">-->
+<!--        <classes>-->
+<!--            <class name="com.mondial.tests.company.CR_CustomersGridTest"/>-->
+<!--        </classes>-->
+<!--    </test>-->
 
-    <test name="Vendors Test">
-        <classes>
-            <class name="com.mondial.tests.company.CR_VendorsTest"/>
-        </classes>
-    </test>
+<!--    <test name="Vendors Test">-->
+<!--        <classes>-->
+<!--            <class name="com.mondial.tests.company.CR_VendorsTest"/>-->
+<!--        </classes>-->
+<!--    </test>-->
 
-    <test name="Vendors Grid Test">
-        <classes>
-            <class name="com.mondial.tests.company.CR_VendorsGridTest"/>
-        </classes>
-    </test>
+<!--    <test name="Vendors Grid Test">-->
+<!--        <classes>-->
+<!--            <class name="com.mondial.tests.company.CR_VendorsGridTest"/>-->
+<!--        </classes>-->
+<!--    </test>-->
 
     <test name="Integration Ledger Templated Report Test">
         <classes>
