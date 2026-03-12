@@ -23,7 +23,7 @@ dependency-reduced-pom.xml
 # TEST OUTPUT & REPORTS (Generated after test runs)
 # ===============================================
 test-output/
-reports/
+/reports/
 screenshots/
 allure-results/
 surefire-reports/
@@ -118,8 +118,8 @@ secrets.properties
 screenshots/*
 !screenshots/.gitkeep
 
-reports/*
-!reports/.gitkeep
+/reports/*
+!/reports/.gitkeep
 
 test-output/*
 !test-output/.gitkeep
