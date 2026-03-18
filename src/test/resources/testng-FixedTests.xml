@@ -10,46 +10,69 @@
     <parameter name="os" value="windows"/>
     <parameter name="headless" value="false"/>
 
-    <!-- ==================== FAILED TESTS ==================== -->
-    <test name="User Creation Test">
+    <test name="Verify Transaction History">
         <classes>
-            <class name="com.mondial.tests.login.UserCreationTest"/>
+            <class name="com.mondial.tests.tempated.report.I_VerifyTransactionHistory"/>
         </classes>
     </test>
 
-<!--    <test name="Customers Test">-->
-<!--        <classes>-->
-<!--            <class name="com.mondial.tests.company.CR_CustomersTest"/>-->
-<!--        </classes>-->
-<!--    </test>-->
-
-<!--    <test name="Customers Grid Test">-->
-<!--        <classes>-->
-<!--            <class name="com.mondial.tests.company.CR_CustomersGridTest"/>-->
-<!--        </classes>-->
-<!--    </test>-->
-
-<!--    <test name="Vendors Test">-->
-<!--        <classes>-->
-<!--            <class name="com.mondial.tests.company.CR_VendorsTest"/>-->
-<!--        </classes>-->
-<!--    </test>-->
-
-<!--    <test name="Vendors Grid Test">-->
-<!--        <classes>-->
-<!--            <class name="com.mondial.tests.company.CR_VendorsGridTest"/>-->
-<!--        </classes>-->
-<!--    </test>-->
-
-    <test name="Integration Ledger Templated Report Test">
+    <test name="Verify Balance Details Trial Balance">
         <classes>
-            <class name="com.mondial.tests.integrations.IntegrationLedger_TemplatedReportTest"/>
+            <class name="com.mondial.tests.tempated.report.II_VerifyBalanceDetails_TrialBalance"/>
         </classes>
     </test>
 
-    <test name="Zendesk Test">
+    <test name="Verify Balance Details Current Period TB">
         <classes>
-            <class name="com.mondial.tests.integrations.ZendeskTest"/>
+            <class name="com.mondial.tests.tempated.report.III_VerifyBalanceDetails_CurrentPeriodTB"/>
+        </classes>
+    </test>
+
+    <test name="Verify Balance Details Detailed Trial Balance">
+        <classes>
+            <class name="com.mondial.tests.tempated.report.IV_VerifyBalanceDetails_DetailedTrialBalance"/>
+        </classes>
+    </test>
+
+    <test name="Verify Trial Balance For All Transaction Types">
+        <classes>
+            <class name="com.mondial.tests.tempated.report.V_VerifyTrialBalance_AllTxnTypes"/>
+        </classes>
+    </test>
+
+    <test name="Verify Trial Balance With Accounting Period">
+        <classes>
+            <class name="com.mondial.tests.tempated.report.VII_VerifyTrialBalance_AccountingPeriod"/>
+        </classes>
+    </test>
+
+    <test name="Verify Trial Balance For All Currencies">
+        <classes>
+            <class name="com.mondial.tests.tempated.report.VIII_VerifyTrialBalance_AllCurrencies"/>
+        </classes>
+    </test>
+
+    <test name="Verify Trial Balance For All Natural Account Sets">
+        <classes>
+            <class name="com.mondial.tests.tempated.report.IX_VerifyTrialBalance_AllNaturalAccountSets"/>
+        </classes>
+    </test>
+
+    <test name="Verify Trial Balance For All Ledgers">
+        <classes>
+            <class name="com.mondial.tests.tempated.report.X_VerifyTrialBalance_AllLedgers"/>
+        </classes>
+    </test>
+
+    <test name="Verify All Report Types">
+        <classes>
+            <class name="com.mondial.tests.tempated.report.XI_VerifyAllReportTypes"/>
+        </classes>
+    </test>
+
+    <test name="Verify Download">
+        <classes>
+            <class name="com.mondial.tests.tempated.report.XII_VerifyDownload"/>
         </classes>
     </test>
 

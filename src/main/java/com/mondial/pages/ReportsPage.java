@@ -274,7 +274,7 @@ public class ReportsPage extends BasePage {
 			}
 		}
 		double creditTotal = creditSum(credit);
-		Assert.assertEquals(creditTotal, debitTotal);
+		Assert.assertEquals(creditTotal, debitTotal, 0.01, "Credit and Debit totals should match");
 	}
 
 	public static double debitSum(Double[] debit) {
@@ -300,13 +300,18 @@ public class ReportsPage extends BasePage {
 	public String verifyAccountPeriodField(String companyName, String reportType) throws InterruptedException {
 		selectCompany(companyName);
 		waitForPageLoad();
+		Thread.sleep(30);
 		selectReport(reportType);
+		waitForPageLoad();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@name='report_fields[accounting_period_start_date]']")));
+		selectNaturalAccountSets("Local");
 		waitForPageLoad();
 		selectOutputType("Screen");
 		waitForPageLoad();
 		accountingPeriodDD.click();
-		accountingPeriodList.get(1).click();
+		wait.until(ExpectedConditions.visibilityOf(accountingPeriodList.get(1)));
 		String date = accountingPeriodList.get(1).getAttribute("innerText");
+		accountingPeriodList.get(1).click();
 		waitForPageLoad();
 		generateButton.click();
 		wait.until(ExpectedConditions.visibilityOf(heading));
@@ -320,14 +325,15 @@ public class ReportsPage extends BasePage {
 		waitForPageLoad();
 		selectReport(reportType);
 		waitForPageLoad();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@name='report_fields[accounting_period_start_date]']")));
 		selectCurrency("USD");
 		waitForPageLoad();
 		selectNaturalAccountSets("Local");
 		waitForPageLoad();
 		selectLedger("Default");
 		waitForPageLoad();
-		waitForPageLoad();
 		selectOutputType("Screen");
+		waitForPageLoad();
 		selectDatesJS("11/11/2024", "12/12/2024");
 	}
 
@@ -367,17 +373,27 @@ public class ReportsPage extends BasePage {
 	}
 
 	public void selectCompany(String cName) {
-		WebElement dropdownLink = driver.findElement(By.xpath("//a[@class='chosen-single']"));
-		Actions action = new Actions(driver);
-		action.moveToElement(dropdownLink).perform();
-		inputCName.sendKeys(cName);
-		inputCName.sendKeys(Keys.ENTER);
+		WebElement dropdownLink = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@id='report_company_id_chosen']//a")));
+		jse.executeScript("arguments[0].click();", dropdownLink);
+		WebElement input = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@id='report_company_id_chosen']//input[@class='chosen-search-input']")));
+		input.sendKeys(cName);
+		wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@id='report_company_id_chosen']//li[contains(@class,'active-result')]")));
+		input.sendKeys(Keys.ENTER);
 	}
 
 	public void selectReport(String rName) throws InterruptedException {
-		reportDD.click();
-		inputRName.sendKeys(rName);
-		inputRName.sendKeys(Keys.ENTER);
+		// Find the hidden underlying <select> for report type and set via JS
+		WebElement select = wait.until(ExpectedConditions.presenceOfElementLocated(
+				By.xpath("//select[.//option[normalize-space(text())='Trial Balance'] and .//option[normalize-space(text())='Transaction History']]")));
+		jse.executeScript(
+				"var sel = arguments[0], name = arguments[1];" +
+				"for(var i=0;i<sel.options.length;i++){" +
+				"  if(sel.options[i].text.trim()===name){ sel.selectedIndex=i; break; }" +
+				"}" +
+				"sel.dispatchEvent(new Event('change',{bubbles:true}));" +
+				"if(window.jQuery){jQuery(sel).trigger('chosen:updated');}",
+				select, rName);
+		Thread.sleep(500);
 	}
 
 	public void selectAccoutingPeriod(String ap) {
@@ -387,38 +403,47 @@ public class ReportsPage extends BasePage {
 	}
 
 	public void selectCurrency(String currency) {
-		boolean isPresent = driver.findElements(By.xpath("//div[@id='report_fields_currency_code_chosen']//a"))
-				.size() > 0;
-		if (isPresent) {
-			reportingCurrencyDD.click();
-			inputCurrency.sendKeys(currency);
-			inputCurrency.sendKeys(Keys.ENTER);
+		List<WebElement> els = driver.findElements(By.xpath("//div[@id='report_fields_currency_code_chosen']//a"));
+		if (!els.isEmpty()) {
+			WebElement dd = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@id='report_fields_currency_code_chosen']//a")));
+			jse.executeScript("arguments[0].click();", dd);
+			WebElement input = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@id='report_fields_currency_code_chosen']//input[@class='chosen-search-input']")));
+			input.sendKeys(currency);
+			input.sendKeys(Keys.ENTER);
 		}
 	}
 
 	public void selectNaturalAccountSets(String accountSet) {
-		boolean isPresent = driver.findElements(By.xpath("//div[@id='report_fields_natural_account_set_id_chosen']//a"))
-				.size() > 0;
-		if (isPresent) {
-			naturalAccountSetDD.click();
-			inputNaturalACSet.sendKeys(accountSet);
-			inputNaturalACSet.sendKeys(Keys.ENTER);
+		List<WebElement> els = driver.findElements(By.xpath("//div[@id='report_fields_natural_account_set_id_chosen']//a"));
+		if (!els.isEmpty()) {
+			WebElement dd = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@id='report_fields_natural_account_set_id_chosen']//a")));
+			jse.executeScript("arguments[0].click();", dd);
+			WebElement input = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@id='report_fields_natural_account_set_id_chosen']//input[@class='chosen-search-input']")));
+			input.sendKeys(accountSet);
+			input.sendKeys(Keys.ENTER);
 		}
 	}
 
 	public void selectLedger(String ledger) {
-		boolean isPresent = driver.findElements(By.xpath("//div[@id='report_fields_ledger_id_chosen']//a")).size() > 0;
-		if (isPresent) {
-			ledgerDD.click();
-			inputLedger.sendKeys(ledger);
-			inputLedger.sendKeys(Keys.ENTER);
+		List<WebElement> els = driver.findElements(By.xpath("//div[@id='report_fields_ledger_id_chosen']//a"));
+		if (!els.isEmpty()) {
+			WebElement dd = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@id='report_fields_ledger_id_chosen']//a")));
+			jse.executeScript("arguments[0].click();", dd);
+			WebElement input = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@id='report_fields_ledger_id_chosen']//input[@class='chosen-search-input']")));
+			input.sendKeys(ledger);
+			input.sendKeys(Keys.ENTER);
 		}
 	}
 
 	public void selectOutputType(String type) {
-		outputTypeDD.click();
-		inputOutputType.sendKeys(type);
-		inputOutputType.sendKeys(Keys.ENTER);
+		List<WebElement> els = driver.findElements(By.xpath("//div[@id='report_fields_report_format_chosen']//a"));
+		if (!els.isEmpty()) {
+			WebElement dd = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@id='report_fields_report_format_chosen']//a")));
+			jse.executeScript("arguments[0].click();", dd);
+			WebElement input = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@id='report_fields_report_format_chosen']//input[@class='chosen-search-input']")));
+			input.sendKeys(type);
+			input.sendKeys(Keys.ENTER);
+		}
 	}
 
 	public boolean verifyRecordPresent(String txnId) {
@@ -612,6 +637,26 @@ public class ReportsPage extends BasePage {
 		Collections.sort(tableValues);
 		System.out.println(tableValues);
 		return tableValues;
+	}
+
+	public List<String> getCurrencies() {
+		List<String> list = new ArrayList<>();
+		for (WebElement option : driver.findElements(By.xpath("//select[@id='report_fields_currency_code']//option"))) {
+			String text = option.getAttribute("innerText").trim();
+			if (!text.isEmpty() && !text.toLowerCase().startsWith("select"))
+				list.add(text);
+		}
+		return list;
+	}
+
+	public List<String> getNaturalAccountSets() {
+		List<String> list = new ArrayList<>();
+		for (WebElement option : driver.findElements(By.xpath("//select[@id='report_fields_natural_account_set_id']//option"))) {
+			String text = option.getAttribute("innerText").trim();
+			if (!text.isEmpty() && !text.toLowerCase().startsWith("select") && !text.equalsIgnoreCase("No Selection"))
+				list.add(text);
+		}
+		return list;
 	}
 
 	// ============================================

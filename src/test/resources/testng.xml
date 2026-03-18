@@ -277,4 +277,71 @@
         </classes>
     </test>
 
+    <!-- ==================== TEMPLATED REPORTS ==================== -->
+    <test name="Verify Transaction History Tests">
+        <classes>
+            <class name="com.mondial.tests.tempated.report.I_VerifyTransactionHistory"/>
+        </classes>
+    </test>
+
+    <test name="Verify Balance Details Trial Balance Tests">
+        <classes>
+            <class name="com.mondial.tests.tempated.report.II_VerifyBalanceDetails_TrialBalance"/>
+        </classes>
+    </test>
+
+    <test name="Verify Balance Details Current Period TB Tests">
+        <classes>
+            <class name="com.mondial.tests.tempated.report.III_VerifyBalanceDetails_CurrentPeriodTB"/>
+        </classes>
+    </test>
+
+    <test name="Verify Balance Details Detailed Trial Balance Tests">
+        <classes>
+            <class name="com.mondial.tests.tempated.report.IV_VerifyBalanceDetails_DetailedTrialBalance"/>
+        </classes>
+    </test>
+
+    <test name="Verify Trial Balance For All Transaction Types Tests">
+        <classes>
+            <class name="com.mondial.tests.tempated.report.V_VerifyTrialBalance_AllTxnTypes"/>
+        </classes>
+    </test>
+
+    <test name="Verify Trial Balance With Accounting Period Tests">
+        <classes>
+            <class name="com.mondial.tests.tempated.report.VII_VerifyTrialBalance_AccountingPeriod"/>
+        </classes>
+    </test>
+
+    <test name="Verify Trial Balance For All Currencies Tests">
+        <classes>
+            <class name="com.mondial.tests.tempated.report.VIII_VerifyTrialBalance_AllCurrencies"/>
+        </classes>
+    </test>
+
+    <test name="Verify Trial Balance For All Natural Account Sets Tests">
+        <classes>
+            <class name="com.mondial.tests.tempated.report.IX_VerifyTrialBalance_AllNaturalAccountSets"/>
+        </classes>
+    </test>
+
+    <test name="Verify Trial Balance For All Ledgers Tests">
+        <classes>
+            <class name="com.mondial.tests.tempated.report.X_VerifyTrialBalance_AllLedgers"/>
+        </classes>
+    </test>
+
+    <test name="Verify All Report Types Tests">
+        <classes>
+            <class name="com.mondial.tests.tempated.report.XI_VerifyAllReportTypes"/>
+        </classes>
+    </test>
+
+    <test name="Verify Download Tests">
+        <classes>
+            <class name="com.mondial.tests.tempated.report.XII_VerifyDownload"/>
+        </classes>
+    </test>
+
 </suite>
