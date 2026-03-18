@@ -42,14 +42,14 @@ public class III_VerifyBalanceDetails_CurrentPeriodTB extends BaseTest {
     @Test(priority = 2, description = "Current Period Trial Balance: Verify Balance Details Page",
             dependsOnMethods = {"generateCPTrialBalance"})
     public void verifyCPTrialBalance() throws InterruptedException {
-        String closingBalance = rp.getBalanceDetails().replaceAll(",", "").stripIndent();
+        String closingBalance = rp.getBalanceDetails().replaceAll(",", "").strip();
         System.out.println("\n\033[0;1m" + PrintColour + "Balance - Current Period Trial Balance Table: "
                 + closingBalance + RESET);
         rp.waitForLoad();
         rp.switchToChildWindow(parentWin);
         System.out.println("\033[3m" + "User navigated to a new window:  " + driver.getTitle() + "\033[0m" + RESET);
         rp.waitForVisible(rp.downloadBtn);
-        String balanceDetails = rp.getBalanceAmount().replaceAll(",", "").stripIndent();
+        String balanceDetails = rp.getBalanceAmount().replaceAll(",", "").strip();
         System.out.println("\n\033[0;1m" + PrintColour + "Balance Details Page: " + balanceDetails + RESET + "\n");
         Assert.assertTrue(rp.showACTxn.getAttribute("innerText").contains("Balance Details:"));
         Assert.assertEquals(balanceDetails, closingBalance);
