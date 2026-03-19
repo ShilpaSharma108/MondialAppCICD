@@ -8,6 +8,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import com.mondial.pages.HomePage;
 import com.mondial.pages.LedgerPage;
 import com.mondial.pages.LoginPage;
 import com.mondial.pages.ReportsWriter;
@@ -18,6 +19,7 @@ import com.mondial.pages.ReportsWriter;
  */
 public class IntegrationLedger_ReportWriterTest extends BaseTest {
 
+	private HomePage homePage;
 	private LedgerPage ledgerPage;
 	private ReportsWriter reportsWriter;
 	private List<String> ledgerPageList;
@@ -28,6 +30,7 @@ public class IntegrationLedger_ReportWriterTest extends BaseTest {
 		System.out.println("=== Starting Ledger-ReportWriter Integration Test Setup ===");
 
 		LoginPage loginPage = new LoginPage(driver);
+		homePage = new HomePage(driver);
 		ledgerPage = new LedgerPage(driver);
 		reportsWriter = new ReportsWriter(driver);
 
@@ -37,11 +40,10 @@ public class IntegrationLedger_ReportWriterTest extends BaseTest {
 		System.out.println("Logging in with user: " + username);
 		loginPage.login(username, password);
 
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		// Wait for the post-login redirect to fully complete before any navigation.
+		// Thread.sleep is unreliable with PageLoadStrategy.NONE; use the same
+		// 60-second company-heading anchor used by all other test classes.
+		homePage.isCompanyHeadingDisplayed();
 
 		System.out.println("=== Ledger-ReportWriter Integration Test Setup Complete ===\n");
 	}

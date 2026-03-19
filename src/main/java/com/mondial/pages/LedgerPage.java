@@ -69,6 +69,8 @@ public class LedgerPage extends BasePage {
 	 */
 	public void navigateToLedgerPage() {
 		waitForPageLoad();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(
+				By.xpath("//a//span[contains(text(),'Enterprise Setup')]")));
 		scrollToElement(enterpriseSetup);
 		wait.until(ExpectedConditions.elementToBeClickable(enterpriseSetup));
 		enterpriseSetup.click();
