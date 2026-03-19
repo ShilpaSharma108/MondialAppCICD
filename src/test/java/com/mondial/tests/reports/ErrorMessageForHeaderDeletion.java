@@ -33,6 +33,19 @@ public class ErrorMessageForHeaderDeletion extends BaseTest {
 
         recordName = "RptHdr_" + System.currentTimeMillis();
         System.out.println("Generated Report Header name: " + recordName);
+
+        // Explicitly wait for the home page after login.
+        // With PageLoadStrategy.NONE the post-login redirect may still be in flight
+        // when @BeforeClass returns, so we anchor here rather than relying solely on
+        // the assertion in the first @Test method.
+        if (!homePage.isCompanyHeadingDisplayed()) {
+            System.out.println("WARNING: Company heading not visible after login – " +
+                "current URL: " + driver.getCurrentUrl() +
+                ". Re-navigating to base URL and retrying.");
+            driver.get(config.getProperty("base.url"));
+            homePage.isCompanyHeadingDisplayed(); // wait up to 60 s on the fresh load
+        }
+
         System.out.println("=== Error Message For Header Deletion Test Setup Complete ===\n");
     }
 

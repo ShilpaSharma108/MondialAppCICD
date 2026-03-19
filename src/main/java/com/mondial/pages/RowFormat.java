@@ -134,6 +134,8 @@ public class RowFormat extends BasePage {
         new Select(ledgerDD).selectByIndex(2);
         wait.until(ExpectedConditions.visibilityOf(reportingSetDD));
         new Select(reportingSetDD).selectByIndex(2);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//select[@id='row_format_default_reporting_currency_code']")));
         new Select(reportingCurrencyDD).selectByIndex(2);
         startDate.sendKeys("01/01/2020");
         endDate.sendKeys("01/31/2020");
