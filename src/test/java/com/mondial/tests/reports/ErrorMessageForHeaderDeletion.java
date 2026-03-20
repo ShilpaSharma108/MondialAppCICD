@@ -38,13 +38,16 @@ public class ErrorMessageForHeaderDeletion extends BaseTest {
         // With PageLoadStrategy.NONE the post-login redirect may still be in flight
         // when @BeforeClass returns, so we anchor here rather than relying solely on
         // the assertion in the first @Test method.
-        if (!homePage.isCompanyHeadingDisplayed()) {
+        boolean headingVisible = homePage.isCompanyHeadingDisplayed();
+        if (!headingVisible) {
             System.out.println("WARNING: Company heading not visible after login – " +
                 "current URL: " + driver.getCurrentUrl() +
                 ". Re-navigating to base URL and retrying.");
             driver.get(config.getProperty("base.url"));
-            homePage.isCompanyHeadingDisplayed(); // wait up to 60 s on the fresh load
+            headingVisible = homePage.isCompanyHeadingDisplayed();
         }
+        Assert.assertTrue(headingVisible,
+                "Company heading not visible after login and retry – cannot proceed with tests");
 
         System.out.println("=== Error Message For Header Deletion Test Setup Complete ===\n");
     }
@@ -52,9 +55,6 @@ public class ErrorMessageForHeaderDeletion extends BaseTest {
     @Test(priority = 1, description = "Create Report Header for deletion error test")
     public void testCreateReportHeader() {
         System.out.println("\n[TEST 1] Creating Report Header: " + recordName);
-
-        Assert.assertTrue(homePage.isCompanyHeadingDisplayed(),
-                "Company heading should be visible after login");
 
         rh.navigateToReportHeader();
 

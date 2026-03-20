@@ -44,11 +44,8 @@ public class CR_NaturalAccCRUDTest extends BaseTest {
         System.out.println("Logging in with user: " + username);
         loginPage.login(username, password);
 
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        Assert.assertTrue(homePage.isCompanyHeadingDisplayed(),
+                "Company heading should be displayed on home page after login");
 
         naturalAccSet = "NASet_" + System.currentTimeMillis();
         System.out.println("Generated Natural Account Set name: " + naturalAccSet);
@@ -63,9 +60,6 @@ public class CR_NaturalAccCRUDTest extends BaseTest {
     @Test(priority = 1, description = "Navigate to Natural Account Set Page")
     public void testNavigateToNaturalAccountSets() {
         System.out.println("\n[TEST 1] Navigating to Natural Account Sets page...");
-
-        Assert.assertTrue(homePage.isCompanyHeadingDisplayed(),
-                         "Company heading should be displayed on home page");
 
         naturalAccountSetPage.navigateToNaturalAccountsPage(companyName);
 
