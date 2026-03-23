@@ -10,15 +10,15 @@
     <parameter name="os" value="windows"/>
     <parameter name="headless" value="false"/>
 
-      <test name="Natural Account Set CRUD">
+    <test name="Reporting Currency Without Journal">
         <classes>
-            <class name="com.mondial.tests.company.CR_NaturalAccCRUDTest"/>
+            <class name="com.mondial.tests.company.CR_ReportingCurrency_WithoutJournal"/>
         </classes>
     </test>
 
-    <test name="Error Message For Header Deletion">
+    <test name="Reporting Currency With Journal">
         <classes>
-            <class name="com.mondial.tests.reports.ErrorMessageForHeaderDeletion"/>
+            <class name="com.mondial.tests.company.CR_ReportingCurrency_WithJournal"/>
         </classes>
     </test>
 
