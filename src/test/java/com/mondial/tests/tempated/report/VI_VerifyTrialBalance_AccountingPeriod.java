@@ -8,7 +8,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class VII_VerifyTrialBalance_AccountingPeriod extends BaseTest {
+public class VI_VerifyTrialBalance_AccountingPeriod extends BaseTest {
 
     private HomePage homePage;
     private ReportsPage rp;

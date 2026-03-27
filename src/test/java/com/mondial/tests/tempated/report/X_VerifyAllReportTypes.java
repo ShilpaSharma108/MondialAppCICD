@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
 import java.util.Arrays;
 import java.util.List;
 
-public class XI_VerifyAllReportTypes extends BaseTest {
+public class X_VerifyAllReportTypes extends BaseTest {
 
     private HomePage homePage;
     private ReportsPage rp;

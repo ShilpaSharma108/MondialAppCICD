@@ -8,7 +8,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class XII_VerifyDownload extends BaseTest {
+public class XI_VerifyDownload extends BaseTest {
 
     private HomePage homePage;
     private ReportsPage rp;

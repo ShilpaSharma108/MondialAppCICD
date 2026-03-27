@@ -8,6 +8,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.JavascriptExecutor;
 
 public class HomePage extends BasePage {
 	
@@ -80,7 +81,23 @@ public class HomePage extends BasePage {
 	
 	@FindBy(xpath = "//input[@value ='Accept Terms of Service']")
 	private WebElement acceptTerms;
-	
+
+	// ── Add Company form fields ──────────────────────────────────────────────
+	@FindBy(xpath = "//input[@id='party_company_name']")
+	private WebElement companyNameField;
+
+	@FindBy(xpath = "//select[@id='company_currency_id']")
+	private WebElement companyCurrencySelect;
+
+	@FindBy(xpath = "//input[@id='company_account_segments']")
+	private WebElement companyAccountSegmentsField;
+
+	@FindBy(xpath = "//input[@id='reporting_set_symbol']")
+	private WebElement companyReportingSymbolField;
+
+	@FindBy(xpath = "//input[@value='Create Company']")
+	private WebElement createCompanyBtn;
+
 	// Constructor
 	public HomePage(WebDriver driver) {
 		super(driver);
@@ -481,6 +498,65 @@ public class HomePage extends BasePage {
 		clickElement(addCompanyBtn);
 	}
 	
+	// ============================================
+	// COMPANY CREATION / DELETION METHODS
+	// ============================================
+
+	/**
+	 * Create a new company from the Home page.
+	 * Clicks "Add Company", fills the form, and submits.
+	 * After return the browser is on the companies listing page.
+	 *
+	 * @param name             - Unique company name
+	 * @param currency         - Currency visible text (e.g. "USD")
+	 * @param numSegments      - Number of account segments (e.g. "1")
+	 * @param reportingSymbol  - Reporting symbol (e.g. "xyz")
+	 */
+	public void createCompany(String name, String currency,
+	                          String numSegments, String reportingSymbol) {
+		wait.until(ExpectedConditions.elementToBeClickable(addCompanyBtn));
+		clickElement(addCompanyBtn);
+		waitForPageLoad();
+
+		wait.until(ExpectedConditions.visibilityOf(companyNameField));
+		companyNameField.clear();
+		companyNameField.sendKeys(name);
+
+		new Select(companyCurrencySelect).selectByVisibleText(currency);
+
+		companyAccountSegmentsField.clear();
+		companyAccountSegmentsField.sendKeys(numSegments);
+
+		companyReportingSymbolField.clear();
+		companyReportingSymbolField.sendKeys(reportingSymbol);
+
+		((JavascriptExecutor) driver).executeScript("arguments[0].click();", createCompanyBtn);
+		waitForPageLoad();
+		wait.until(ExpectedConditions.visibilityOf(companyHeading));
+	}
+
+	/**
+	 * Delete a company from the companies listing table.
+	 * Handles the browser confirmation alert automatically.
+	 *
+	 * @param name - Company name to delete
+	 */
+	public void deleteCompany(String name) {
+		waitForPageLoad();
+		WebElement deleteLink = wait.until(ExpectedConditions.elementToBeClickable(
+				By.xpath("//table[@class='table table-striped']//tr[contains(., '"
+						+ name + "')]//td//a[@data-original-title='Delete']")));
+		scrollToElement(deleteLink);
+		deleteLink.click();
+		try {
+			wait.until(ExpectedConditions.alertIsPresent());
+			driver.switchTo().alert().accept();
+		} catch (Exception e) {
+			System.out.println("No confirmation dialog for company deletion");
+		}
+		waitForPageLoad();
+	}
+
 	// ============================================
 	// ZENDESK / HELP METHODS
 	// ============================================

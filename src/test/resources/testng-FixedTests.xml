@@ -10,15 +10,9 @@
     <parameter name="os" value="windows"/>
     <parameter name="headless" value="false"/>
 
-    <test name="Reporting Currency Without Journal">
+    <test name="ES Verify Error Messages">
         <classes>
-            <class name="com.mondial.tests.company.CR_ReportingCurrency_WithoutJournal"/>
-        </classes>
-    </test>
-
-    <test name="Reporting Currency With Journal">
-        <classes>
-            <class name="com.mondial.tests.company.CR_ReportingCurrency_WithJournal"/>
+            <class name="com.mondial.tests.enterprise.ES_VerifyErrorMessages"/>
         </classes>
     </test>
 

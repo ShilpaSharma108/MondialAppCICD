@@ -86,11 +86,13 @@ public class LedgerPage extends BasePage {
 	 * @param name - Name of the ledger to edit
 	 */
 	public void navigateToEdit(String name) {
-		WebElement editLink = driver.findElement(By.xpath(
+		By editLinkLocator = By.xpath(
 				"//table//td[contains(text(),'" + name
-				+ "')]//following-sibling::td//a[@data-original-title = 'Edit']"));
+				+ "')]//following-sibling::td//a[@data-original-title = 'Edit']");
+		WebElement editLink = driver.findElement(editLinkLocator);
 		scrollToElement(editLink);
-		wait.until(ExpectedConditions.elementToBeClickable(editLink));
+		// Re-find after scroll — avoids stale CDP node reference caused by JS scroll
+		editLink = wait.until(ExpectedConditions.elementToBeClickable(editLinkLocator));
 		editLink.click();
 	}
 

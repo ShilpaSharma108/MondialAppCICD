@@ -5,6 +5,7 @@ import com.mondial.tests.BaseTest;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import com.mondial.pages.HomePage;
 import com.mondial.pages.LoginPage;
 import com.mondial.utils.DriverManager;
 
@@ -32,24 +33,14 @@ public class LoginTest extends BaseTest {
 
         String username = config.getProperty("validUsername");
         String password = config.getProperty("validPassword");
-        
+
         loginPage.login(username, password);
-        
-        // Wait for navigation after login
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        
-        String currentUrl = DriverManager.getDriver().getCurrentUrl();
-        System.out.println("Current URL after login: " + currentUrl);
-        
-        // Verify successful login by checking URL contains expected path
-        Assert.assertTrue(currentUrl.contains("dashboard") || 
-                         currentUrl.contains("home") || 
-                         !currentUrl.contains("login"), 
-                         "Login failed - still on login page");
+
+        // Wait for the Companies heading — handles autologin redirects and CI latency
+        HomePage homePage = new HomePage(driver);
+        System.out.println("Current URL after login: " + driver.getCurrentUrl());
+        Assert.assertTrue(homePage.isCompanyHeadingDisplayed(),
+                "Login failed - company heading should be visible after login");
     }
 
     @Test(priority = 2, description = "Verify error message for invalid login")

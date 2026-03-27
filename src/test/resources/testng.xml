@@ -68,31 +68,64 @@
         </classes>
     </test>
 
-    <!-- ==================== COMPANY - CUSTOMERS ==================== -->
-<!--    <test name="Customers Tests">-->
-<!--        <classes>-->
-<!--            <class name="com.mondial.tests.company.CR_CustomersTest"/>-->
-<!--        </classes>-->
-<!--    </test>-->
+    <!-- ==================== COMPANY - ACCOUNTING PERIOD ==================== -->
+    <test name="Accounting Period Tests">
+        <classes>
+            <class name="com.mondial.tests.company.CR_AccountingPeriod"/>
+        </classes>
+    </test>
 
-<!--    <test name="Customers Grid Tests">-->
-<!--        <classes>-->
-<!--            <class name="com.mondial.tests.company.CR_CustomersGridTest"/>-->
-<!--        </classes>-->
-<!--    </test>-->
+    <test name="Lock Accounting Period Tests">
+        <classes>
+            <class name="com.mondial.tests.company.CR_LockAccountingPeriod"/>
+        </classes>
+    </test>
+
+    <!-- ==================== COMPANY - FIELD VALIDATORS ==================== -->
+    <test name="Field Validators CRUD Tests">
+        <classes>
+            <class name="com.mondial.tests.company.CR_FieldValidatorsCRUD"/>
+        </classes>
+    </test>
+
+    <!-- ==================== COMPANY - REPORTING CURRENCY ==================== -->
+    <test name="Reporting Currency Without Journal Tests">
+        <classes>
+            <class name="com.mondial.tests.company.CR_ReportingCurrency_WithoutJournal"/>
+        </classes>
+    </test>
+
+    <test name="Reporting Currency With Journal Tests">
+        <classes>
+            <class name="com.mondial.tests.company.CR_ReportingCurrency_WithJournal"/>
+        </classes>
+    </test>
+
+    <!-- ==================== COMPANY - CUSTOMERS ==================== -->
+    <test name="Customers Tests">
+        <classes>
+            <class name="com.mondial.tests.company.CR_CustomersTest"/>
+        </classes>
+    </test>
+
+    <test name="Customers Grid Tests">
+        <classes>
+            <class name="com.mondial.tests.company.CR_CustomersGridTest"/>
+        </classes>
+    </test>
 
     <!-- ==================== COMPANY - VENDORS ==================== -->
-<!--    <test name="Vendors Tests">-->
-<!--        <classes>-->
-<!--            <class name="com.mondial.tests.company.CR_VendorsTest"/>-->
-<!--        </classes>-->
-<!--    </test>-->
+    <test name="Vendors Tests">
+        <classes>
+            <class name="com.mondial.tests.company.CR_VendorsTest"/>
+        </classes>
+    </test>
 
-<!--    <test name="Vendors Grid Tests">-->
-<!--        <classes>-->
-<!--            <class name="com.mondial.tests.company.CR_VendorsGridTest"/>-->
-<!--        </classes>-->
-<!--    </test>-->
+    <test name="Vendors Grid Tests">
+        <classes>
+            <class name="com.mondial.tests.company.CR_VendorsGridTest"/>
+        </classes>
+    </test>
 
     <!-- ==================== ENTERPRISE - LEDGER ==================== -->
     <test name="Ledger CRUD Tests">
@@ -123,6 +156,31 @@
     <test name="Alternate Account CSV Upload Tests">
         <classes>
             <class name="com.mondial.tests.enterprise.ES_AA_CSVUploadTest"/>
+        </classes>
+    </test>
+
+    <!-- ==================== ENTERPRISE - USERS ==================== -->
+    <test name="Users CRUD Tests">
+        <classes>
+            <class name="com.mondial.tests.enterprise.ES_Users_CRUD"/>
+        </classes>
+    </test>
+
+    <test name="Users Error Messages Tests">
+        <classes>
+            <class name="com.mondial.tests.enterprise.ES_Users_ErrorMessages"/>
+        </classes>
+    </test>
+
+    <test name="Users Provide Role Tests">
+        <classes>
+            <class name="com.mondial.tests.enterprise.ES_Users_ProvideRole"/>
+        </classes>
+    </test>
+
+    <test name="Users Unauthorised User Tests">
+        <classes>
+            <class name="com.mondial.tests.enterprise.ES_Users_UnauthorisedUser"/>
         </classes>
     </test>
 
@@ -310,13 +368,13 @@
 
     <test name="Verify Trial Balance With Accounting Period Tests">
         <classes>
-            <class name="com.mondial.tests.tempated.report.VII_VerifyTrialBalance_AccountingPeriod"/>
+            <class name="com.mondial.tests.tempated.report.VI_VerifyTrialBalance_AccountingPeriod"/>
         </classes>
     </test>
 
     <test name="Verify Trial Balance For All Currencies Tests">
         <classes>
-            <class name="com.mondial.tests.tempated.report.VIII_VerifyTrialBalance_AllCurrencies"/>
+            <class name="com.mondial.tests.tempated.report.VII_VerifyTrialBalance_AllCurrencies"/>
         </classes>
     </test>
 
@@ -328,19 +386,19 @@
 
     <test name="Verify Trial Balance For All Ledgers Tests">
         <classes>
-            <class name="com.mondial.tests.tempated.report.X_VerifyTrialBalance_AllLedgers"/>
+            <class name="com.mondial.tests.tempated.report.VIII_VerifyTrialBalance_AllLedgers"/>
         </classes>
     </test>
 
     <test name="Verify All Report Types Tests">
         <classes>
-            <class name="com.mondial.tests.tempated.report.XI_VerifyAllReportTypes"/>
+            <class name="com.mondial.tests.tempated.report.X_VerifyAllReportTypes"/>
         </classes>
     </test>
 
     <test name="Verify Download Tests">
         <classes>
-            <class name="com.mondial.tests.tempated.report.XII_VerifyDownload"/>
+            <class name="com.mondial.tests.tempated.report.XI_VerifyDownload"/>
         </classes>
     </test>
 
