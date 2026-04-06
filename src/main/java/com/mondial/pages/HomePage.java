@@ -532,7 +532,7 @@ public class HomePage extends BasePage {
 
 		((JavascriptExecutor) driver).executeScript("arguments[0].click();", createCompanyBtn);
 		waitForPageLoad();
-		wait.until(ExpectedConditions.visibilityOf(companyHeading));
+		isCompanyHeadingDisplayed();
 	}
 
 	/**

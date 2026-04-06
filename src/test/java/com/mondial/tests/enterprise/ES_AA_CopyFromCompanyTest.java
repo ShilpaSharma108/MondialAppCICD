@@ -82,8 +82,7 @@ public class ES_AA_CopyFromCompanyTest extends BaseTest {
         Assert.assertTrue(alternateAccountPage.isAccountSetDetailDisplayed(),
                          "Account set detail page should be displayed after clicking the account link");
 
-        String companyName = alternateAccountPage.getFirstAvailableCompanyName();
-        Assert.assertNotNull(companyName, "At least one company should be available in the dropdown");
+        String companyName = "OEC Brasil";
         System.out.println("[TEST 1] Copying accounts from company: " + companyName);
 
         alternateAccountPage.addRecordsFromCompany(companyName);

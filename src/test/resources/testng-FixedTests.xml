@@ -10,9 +10,27 @@
     <parameter name="os" value="windows"/>
     <parameter name="headless" value="false"/>
 
-    <test name="ES Verify Error Messages">
+    <test name="CR Vendors Grid">
         <classes>
-            <class name="com.mondial.tests.enterprise.ES_VerifyErrorMessages"/>
+            <class name="com.mondial.tests.company.CR_VendorsGridTest"/>
+        </classes>
+    </test>
+
+    <test name="CR Accounting Period">
+        <classes>
+            <class name="com.mondial.tests.company.CR_AccountingPeriod"/>
+        </classes>
+    </test>
+
+    <test name="CR Segment Options All">
+        <classes>
+            <class name="com.mondial.tests.company.CR_SegmentOptionsAllTest"/>
+        </classes>
+    </test>
+
+    <test name="Integration Report Header In Report">
+        <classes>
+            <class name="com.mondial.tests.integrations.IntegrationReportHeaderInReport"/>
         </classes>
     </test>
 
