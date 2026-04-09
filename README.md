@@ -30,11 +30,12 @@ web-automation-framework/
 │   │       └── config.properties  # Test configuration (URL, credentials, company)
 │   └── test/
 │       ├── java/com/mondial/
+│       │   ├── drilldown/                # Drilldown tests (Trial Balance, Transaction History)
 │       │   ├── tests/
 │       │   │   ├── BaseTest.java         # Base test class (driver setup/teardown)
 │       │   │   ├── login/                # Login & user creation tests
 │       │   │   ├── company/              # Company module tests (COA, Segments, Customers, Vendors, Accounting Period)
-│       │   │   ├── enterprise/           # Enterprise Setup tests (Ledger, Alternate Accounts, Users)
+│       │   │   ├── enterprise/           # Enterprise Setup tests (Ledger, Alternate Accounts, Exchange Rates, Users)
 │       │   │   ├── reports/              # Report Writer module tests (RowFormat, ColumnLayout, FormatCodes, Headers, Footers)
 │       │   │   ├── integrations/         # End-to-end integration tests
 │       │   │   └── templated/report/     # Templated report verification tests
@@ -61,9 +62,8 @@ web-automation-framework/
 - `CR_SegmentCRUDTest` / `CR_SegmentValidationTest` / `CR_SegmentOptionsAllTest` / `CR_SegmentCSVTemplateTest` – Reporting Segments
 - `CR_FieldValidatorsCRUD` – Field Validators CRUD
 - `CR_ReportingCurrency_WithoutJournal` / `CR_ReportingCurrency_WithJournal` – Reporting Currency
-- `CR_CustomersTest` / `CR_CustomersGridTest` – Customers CRUD and grid operations
-- `CR_CustomersSortTest` – Customers grid sort by customer name (ascending/descending)
-- `CR_VendorsTest` / `CR_VendorsGridTest` – Vendors CRUD and grid operations
+- `CR_CustomersTest` / `CR_CustomersGridTest` – Customers CRUD and grid operations (filter, download, invalid CSV)
+- `CR_VendorsTest` / `CR_VendorsGridTest` – Vendors CRUD and grid operations (filter, download, invalid CSV)
 - `CR_AccountingPeriod` – Accounting Period creation and role assignment
 - `CR_LockAccountingPeriod` – Lock/Unlock Accounting Period
 
@@ -73,6 +73,10 @@ web-automation-framework/
 - `ES_AA_CRUDTest` – Alternate Accounts CRUD
 - `ES_AA_CopyFromCompanyTest` – Copy Alternate Accounts from OEC Brasil
 - `ES_AA_CSVUploadTest` – Alternate Accounts CSV upload
+- `ES_ExchangeRateSource_CRUD` – Exchange Rate Source CRUD
+- `ES_GetExchangeRates` – Get/retrieve exchange rates
+- `ES_ExchangeVerifyCSVUploadDownload` – Exchange Rates CSV upload and download
+- `ES_Exchange_VerifyUnauthorisedUserUnabletoAccess` – Unauthorised access to Exchange Rates
 - `ES_Users_CRUD` – Users CRUD (create, edit, delete)
 - `ES_Users_ErrorMessages` – User creation error message validation
 - `ES_Users_ProvideRole` – Assign role to a user
@@ -97,6 +101,10 @@ web-automation-framework/
 - `IntegrationLedger_ReportWriterTest` – Ledger integrated with Report Writer
 - `IntegrationLedger_TemplatedReportTest` – Ledger integrated with Templated Reports
 - `ZendeskTest` – Zendesk integration
+
+### Drilldown
+- `DrilldownTrialBalanceTest` – Generate Trial Balance and drilldown into non-zero balance records to verify Balance Details
+- `DrilldownTransactionHistoryTest` – Drilldown into Transaction History from Templated Reports
 
 ### Templated Reports
 - `I_VerifyTransactionHistory` – Transaction history
