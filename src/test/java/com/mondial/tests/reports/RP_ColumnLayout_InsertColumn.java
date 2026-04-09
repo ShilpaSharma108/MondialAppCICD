@@ -30,6 +30,14 @@ public class RP_ColumnLayout_InsertColumn extends BaseTest {
         String password = config.getProperty("validPassword");
         loginPage.login(username, password);
 
+        // If the browser is on a non-home page after login (e.g. previous test left
+        // it elsewhere), navigate explicitly so the company heading is visible.
+        if (!homePage.isCompanyHeadingDisplayed()) {
+            System.out.println("WARNING: Company heading not visible after login – re-navigating.");
+            driver.get(config.getProperty("base.url"));
+            homePage.isCompanyHeadingDisplayed();
+        }
+
         recordName = "ColLayout_" + System.currentTimeMillis();
         System.out.println("Generated Column Layout name: " + recordName);
         System.out.println("=== Column Layout Insert Column Test Setup Complete ===\n");

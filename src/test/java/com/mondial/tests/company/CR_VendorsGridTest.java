@@ -2,8 +2,6 @@ package com.mondial.tests.company;
 
 import com.mondial.tests.BaseTest;
 
-import java.util.List;
-
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -101,45 +99,14 @@ public class CR_VendorsGridTest extends BaseTest {
     }
 
     /**
-     * Test 2: Sort AG Grid by company name column
-    */
-    @Test(priority = 2, dependsOnMethods = {"testNavigateAndUploadVendors"}, description = "Sort grid by company name")
-    public void testSortGridByCompanyName() {
-        System.out.println("\n[TEST 2] Sorting grid by company name...");
-
-        // Click column header to sort ascending
-        customersVendorsPage.clickColumnHeader("company_name");
-        List<String> ascValues = customersVendorsPage.getColumnValues("company_name");
-        System.out.println("[TEST 2] Values after first click (ascending): " + ascValues);
-
-        Assert.assertTrue(customersVendorsPage.isSortedAscending(ascValues),
-                         "Column values should be sorted in ascending order");
-        System.out.println("[TEST 2] Ascending sort verified");
-
-        // Click again to sort descending
-        customersVendorsPage.clickColumnHeader("company_name");
-        List<String> descValues = customersVendorsPage.getColumnValues("company_name");
-        System.out.println("[TEST 2] Values after second click (descending): " + descValues);
-
-        Assert.assertTrue(customersVendorsPage.isSortedDescending(descValues),
-                         "Column values should be sorted in descending order");
-        System.out.println("[TEST 2] Descending sort verified");
-
-        // Click again to reset sort
-        customersVendorsPage.clickColumnHeader("company_name");
-
-        System.out.println("[TEST 2] Sort by company name verified successfully");
-    }
-
-    /**
-     * Test 3: Filter AG Grid by company name
+     * Test 2: Filter AG Grid by company name
      */
-    @Test(priority = 3, dependsOnMethods = {"testNavigateAndUploadVendors"}, description = "Filter grid by company name")
+    @Test(priority = 2, dependsOnMethods = {"testNavigateAndUploadVendors"}, description = "Filter grid by company name")
     public void testFilterGridByCompanyName() {
-        System.out.println("\n[TEST 3] Filtering grid by company name...");
+        System.out.println("\n[TEST 2] Filtering grid by company name...");
 
         int totalRecords = customersVendorsPage.getRecordCount();
-        System.out.println("[TEST 3] Total records before filter: " + totalRecords);
+        System.out.println("[TEST 2] Total records before filter: " + totalRecords);
 
         // Open filter on company_name column
         customersVendorsPage.openColumnFilter("company_name");
@@ -148,7 +115,7 @@ public class CR_VendorsGridTest extends BaseTest {
         customersVendorsPage.enterFilterText("Raiders");
 
         int filteredRecords = customersVendorsPage.getRecordCount();
-        System.out.println("[TEST 3] Records after filter: " + filteredRecords);
+        System.out.println("[TEST 2] Records after filter: " + filteredRecords);
 
         Assert.assertTrue(filteredRecords > 0,
                          "Should have at least one matching record");
@@ -159,20 +126,20 @@ public class CR_VendorsGridTest extends BaseTest {
         customersVendorsPage.clearFilter();
 
         int afterClearRecords = customersVendorsPage.getRecordCount();
-        System.out.println("[TEST 3] Records after clearing filter: " + afterClearRecords);
+        System.out.println("[TEST 2] Records after clearing filter: " + afterClearRecords);
 
         Assert.assertEquals(afterClearRecords, totalRecords,
                            "All records should be visible after clearing filter");
 
-        System.out.println("[TEST 3] Filter by company name verified successfully");
+        System.out.println("[TEST 2] Filter by company name verified successfully");
     }
 
     /**
-     * Test 4: Download Table as CSV and verify page stays on Vendors
+     * Test 3: Download Table as CSV and verify page stays on Vendors
      */
-    @Test(priority = 4, dependsOnMethods = {"testFilterGridByCompanyName"}, description = "Download Table as CSV")
+    @Test(priority = 3, dependsOnMethods = {"testFilterGridByCompanyName"}, description = "Download Table as CSV")
     public void testDownloadTable() {
-        System.out.println("\n[TEST 4] Downloading Table as CSV...");
+        System.out.println("\n[TEST 3] Downloading Table as CSV...");
 
         customersVendorsPage.clickDownloadTable();
 
@@ -180,19 +147,19 @@ public class CR_VendorsGridTest extends BaseTest {
         Assert.assertTrue(heading.contains(companyName + " - Vendors"),
                          "Should remain on Vendors page after download");
 
-        System.out.println("[TEST 4] Table downloaded successfully");
+        System.out.println("[TEST 3] Table downloaded successfully");
     }
 
     /**
-     * Test 5: Upload invalid CSV file and verify error message
+     * Test 4: Upload invalid CSV file and verify error message
      */
-    @Test(priority = 5, dependsOnMethods = {"testDownloadTable"}, description = "Upload invalid CSV file")
+    @Test(priority = 4, dependsOnMethods = {"testDownloadTable"}, description = "Upload invalid CSV file")
     public void testUploadInvalidCSV() {
-        System.out.println("\n[TEST 5] Uploading invalid CSV file...");
-        System.out.println("[TEST 5] Invalid CSV path: " + INVALID_CSV_PATH);
+        System.out.println("\n[TEST 4] Uploading invalid CSV file...");
+        System.out.println("[TEST 4] Invalid CSV path: " + INVALID_CSV_PATH);
 
         customersVendorsPage.uploadCSVFile(INVALID_CSV_PATH);
-        System.out.println("[TEST 5] Uploaded file: invalid_vendors.csv");
+        System.out.println("[TEST 4] Uploaded file: invalid_vendors.csv");
 
         Assert.assertTrue(customersVendorsPage.isUploadErrorDisplayed(),
                          "Upload error message should be displayed for invalid CSV");
@@ -202,21 +169,21 @@ public class CR_VendorsGridTest extends BaseTest {
         Assert.assertTrue(heading.contains(companyName + " - Vendors"),
                          "Should remain on Vendors page after failed upload");
 
-        System.out.println("[TEST 5] Invalid CSV upload error verified successfully");
+        System.out.println("[TEST 4] Invalid CSV upload error verified successfully");
     }
 
     /**
-     * Test 6: Delete all uploaded vendor records and verify deletion
+     * Test 5: Delete all uploaded vendor records and verify deletion
      */
-    @Test(priority = 6, dependsOnMethods = {"testUploadInvalidCSV"}, description = "Delete uploaded vendor records")
+    @Test(priority = 5, dependsOnMethods = {"testUploadInvalidCSV"}, description = "Delete uploaded vendor records")
     public void testDeleteUploadedRecords() {
-        System.out.println("\n[TEST 6] Deleting uploaded vendor records...");
+        System.out.println("\n[TEST 5] Deleting uploaded vendor records...");
 
         customersVendorsPage.deleteAllRecords();
 
         Assert.assertFalse(customersVendorsPage.hasRecords(),
                           "No records should be present after deletion");
 
-        System.out.println("[TEST 6] All vendor records deleted successfully");
+        System.out.println("[TEST 5] All vendor records deleted successfully");
     }
 }

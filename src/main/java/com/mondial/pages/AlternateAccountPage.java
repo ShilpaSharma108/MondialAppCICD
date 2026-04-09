@@ -401,11 +401,19 @@ public class AlternateAccountPage extends BasePage {
 	}
 
 	/**
-	 * Check if the accounts list within a set is non-empty
+	 * Check if the accounts list within a set is non-empty.
+	 * Waits up to 60 seconds for at least one row to appear (grid renders asynchronously after upload).
 	 * @return true if accounts are present, false otherwise
 	 */
 	public boolean isAccountsListPopulated() {
-		return !accountsList.isEmpty();
+		try {
+			new org.openqa.selenium.support.ui.WebDriverWait(driver, java.time.Duration.ofSeconds(60))
+				.until(ExpectedConditions.numberOfElementsToBeMoreThan(
+					By.xpath("//div[@ref='eContainer'][@role='rowgroup']//div[@role='row']"), 0));
+			return !accountsList.isEmpty();
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	/**

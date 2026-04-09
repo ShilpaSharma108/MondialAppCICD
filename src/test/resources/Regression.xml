@@ -127,6 +127,31 @@
         </classes>
     </test>
 
+    <!-- ==================== ENTERPRISE - EXCHANGE RATES ==================== -->
+    <test name="ES Exchange Rate Source CRUD">
+        <classes>
+            <class name="com.mondial.tests.enterprise.ES_ExchangeRateSource_CRUD"/>
+        </classes>
+    </test>
+
+    <test name="ES Get Exchange Rates">
+        <classes>
+            <class name="com.mondial.tests.enterprise.ES_GetExchangeRates"/>
+        </classes>
+    </test>
+
+    <test name="ES Exchange Verify CSV Upload Download">
+        <classes>
+            <class name="com.mondial.tests.enterprise.ES_ExchangeVerifyCSVUploadDownload"/>
+        </classes>
+    </test>
+
+    <test name="ES Exchange Verify Unauthorised User Unable to Access">
+        <classes>
+            <class name="com.mondial.tests.enterprise.ES_Exchange_VerifyUnauthorisedUserUnabletoAccess"/>
+        </classes>
+    </test>
+
     <!-- ==================== ENTERPRISE - LEDGER ==================== -->
     <test name="Ledger CRUD Tests">
         <classes>

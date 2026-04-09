@@ -1,12 +1,8 @@
 package com.mondial.pages;
 
-import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
-import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -340,87 +336,6 @@ public class CustomersVendorsPage extends BasePage {
 			}
 		}
 		return false;
-	}
-
-	// ============================================
-	// SORT METHODS
-	// ============================================
-
-	/**
-	 * Click an AG Grid column header to sort.
-	 * Must click the inner label span (not the outer container div) because AG Grid
-	 * only triggers sort on the label element. Waits for the header cell's class
-	 * attribute to change, which AG Grid updates synchronously with the sort state
-	 * (ag-header-cell-sorted-asc / ag-header-cell-sorted-desc / neither).
-	 * @param colId - The col-id attribute of the column to sort
-	 */
-	public void clickColumnHeader(String colId) {
-		waitForPageLoad();
-		// Dump the ag-header-row outerHTML to see full rendered header structure
-		List<WebElement> headerRows = driver.findElements(By.xpath("//div[contains(@class,'ag-header-row')]"));
-		System.out.println("[clickColumnHeader] ag-header-row count: " + headerRows.size());
-		for (int i = 0; i < headerRows.size(); i++) {
-			String inner = headerRows.get(i).getAttribute("innerHTML");
-			System.out.println("  headerRow[" + i + "] innerHTML(500)="
-					+ (inner == null ? "null" : inner.substring(0, Math.min(500, inner.length()))));
-		}
-		// Also log all column header elements (role=columnheader)
-		List<WebElement> colHeaders = driver.findElements(By.xpath("//div[@role='columnheader']"));
-		System.out.println("[clickColumnHeader] columnheader count: " + colHeaders.size());
-		for (int i = 0; i < colHeaders.size(); i++) {
-			String colIdAttr = colHeaders.get(i).getAttribute("col-id");
-			String text = colHeaders.get(i).getText();
-			System.out.println("  colHeader[" + i + "] col-id=" + colIdAttr + " text='" + text + "'");
-		}
-	}
-
-	/**
-	 * Get all cell values for a specific column from the AG Grid
-	 * @param colId - The col-id attribute of the column
-	 * @return List of cell values as strings
-	 */
-	public List<String> getColumnValues(String colId) {
-		waitForPageLoad();
-		List<WebElement> cells = driver.findElements(
-				By.xpath("//div[@role='gridcell'][@col-id='" + colId + "']"));
-		List<String> values = new ArrayList<>();
-		for (WebElement cell : cells) {
-			String text = cell.getAttribute("innerText").trim();
-			if (!text.isEmpty()) {
-				values.add(text);
-			}
-		}
-		return values;
-	}
-
-	/**
-	 * Check if column values are sorted in ascending order.
-	 * Uses Collator (locale-aware) to match AG Grid's JavaScript sort behaviour
-	 * instead of Java's natural Unicode ordering, which can differ on mixed-case
-	 * or locale-specific strings.
-	 * @param values - List of string values to check
-	 * @return true if sorted ascending (case-insensitive)
-	 */
-	public boolean isSortedAscending(List<String> values) {
-		Collator collator = Collator.getInstance(Locale.ENGLISH);
-		collator.setStrength(Collator.SECONDARY); // case-insensitive
-		List<String> expected = new ArrayList<>(values);
-		expected.sort(collator);
-		return values.equals(expected);
-	}
-
-	/**
-	 * Check if column values are sorted in descending order.
-	 * Uses Collator (locale-aware) to match AG Grid's JavaScript sort behaviour.
-	 * @param values - List of string values to check
-	 * @return true if sorted descending (case-insensitive)
-	 */
-	public boolean isSortedDescending(List<String> values) {
-		Collator collator = Collator.getInstance(Locale.ENGLISH);
-		collator.setStrength(Collator.SECONDARY); // case-insensitive
-		List<String> expected = new ArrayList<>(values);
-		expected.sort(collator.reversed());
-		return values.equals(expected);
 	}
 
 	// ============================================

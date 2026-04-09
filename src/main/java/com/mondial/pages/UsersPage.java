@@ -192,8 +192,13 @@ public class UsersPage extends BasePage {
 		confirmPW.sendKeys(cp);
 		wait.until(ExpectedConditions.elementToBeClickable(submitBtn));
 		clickElement(submitBtn);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(FAILURE_MSG_BY));
-		String message = driver.findElement(FAILURE_MSG_BY).getAttribute("innerText");
+		// Use refreshed() to tolerate stale element references — the alert-danger div
+		// can be replaced by a new DOM node between the wait and the getAttribute call
+		// when the form re-renders on consecutive submissions.
+		WebElement msgEl = wait.until(
+				ExpectedConditions.refreshed(
+						ExpectedConditions.visibilityOfElementLocated(FAILURE_MSG_BY)));
+		String message = msgEl.getAttribute("innerText");
 		clickElement(closeError);
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(FAILURE_MSG_BY));
 		return message;

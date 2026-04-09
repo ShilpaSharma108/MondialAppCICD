@@ -10,27 +10,33 @@
     <parameter name="os" value="windows"/>
     <parameter name="headless" value="false"/>
 
-    <test name="CR Vendors Grid">
+    <test name="ES Exchange Rate Source CRUD">
         <classes>
-            <class name="com.mondial.tests.company.CR_VendorsGridTest"/>
+            <class name="com.mondial.tests.enterprise.ES_ExchangeRateSource_CRUD"/>
         </classes>
     </test>
 
-    <test name="CR Accounting Period">
+    <test name="ES Get Exchange Rates">
         <classes>
-            <class name="com.mondial.tests.company.CR_AccountingPeriod"/>
+            <class name="com.mondial.tests.enterprise.ES_GetExchangeRates"/>
         </classes>
     </test>
 
-    <test name="CR Segment Options All">
+    <test name="ES Sort Exchange Rates">
         <classes>
-            <class name="com.mondial.tests.company.CR_SegmentOptionsAllTest"/>
+            <class name="com.mondial.tests.enterprise.ES_SortExchangeRates"/>
         </classes>
     </test>
 
-    <test name="Integration Report Header In Report">
+    <test name="ES Exchange Verify CSV Upload Download">
         <classes>
-            <class name="com.mondial.tests.integrations.IntegrationReportHeaderInReport"/>
+            <class name="com.mondial.tests.enterprise.ES_ExchangeVerifyCSVUploadDownload"/>
+        </classes>
+    </test>
+
+    <test name="ES Exchange Verify Unauthorised User Unable to Access">
+        <classes>
+            <class name="com.mondial.tests.enterprise.ES_Exchange_VerifyUnauthorisedUserUnabletoAccess"/>
         </classes>
     </test>
 

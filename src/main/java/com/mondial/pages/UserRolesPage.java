@@ -50,9 +50,12 @@ public class UserRolesPage extends BasePage {
                 By.xpath("//a[contains(text(),'Users')]")));
         driver.findElement(By.xpath("//a[contains(text(),'Users')]")).click();
 
-        // Wait until the Users page is loaded (Add User button is the landmark)
-        wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//div[@class='container']//a[contains(.,' User')]")));
+        // Wait until the Users page is loaded (Add User button is the landmark).
+        // Use 60s — during a full regression run the server can be slow to render
+        // this page after navigating from Enterprise Setup.
+        new org.openqa.selenium.support.ui.WebDriverWait(driver, java.time.Duration.ofSeconds(60))
+                .until(ExpectedConditions.elementToBeClickable(
+                        By.xpath("//div[@class='container']//a[contains(.,' User')]")));
         waitForPageLoad();
         System.out.println("[UserRolesPage] Users page loaded. URL: " + driver.getCurrentUrl());
     }
