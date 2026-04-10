@@ -4,6 +4,7 @@ import com.mondial.tests.BaseTest;
 import com.mondial.pages.ExchangeRatePage;
 import com.mondial.pages.HomePage;
 import com.mondial.pages.LoginPage;
+import com.mondial.utils.DriverManager;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -55,11 +56,10 @@ public class ES_GetExchangeRates extends BaseTest {
      * Test 2: Download the exchange rates CSV and verify the file is created
      */
     @Test(priority = 2, dependsOnMethods = {"getExchangeRateERS"}, description = "Download File")
-    public void downloadExchangeRatesFile() throws InterruptedException {
+    public void downloadExchangeRatesFile() {
         exchangeRatePage.clickDownloadCSV();
-        Thread.sleep(1000);
 
-        String downloadDir = System.getProperty("user.home") + File.separator + "Downloads";
+        String downloadDir = DriverManager.getDownloadDir();
         Assert.assertTrue(isFileDownloaded(downloadDir, "exchange_rates"),
                 "exchange_rates CSV file should be downloaded to: " + downloadDir);
     }
@@ -80,10 +80,19 @@ public class ES_GetExchangeRates extends BaseTest {
             System.out.println("Download directory not found: " + directoryPath);
             return false;
         }
-        File[] files = dir.listFiles((d, name) -> name.startsWith(filePrefix));
-        if (files != null && files.length > 0) {
-            System.out.println("Downloaded file found: " + files[0].getName());
-            return true;
+        int maxWaitSeconds = 15;
+        for (int i = 0; i < maxWaitSeconds; i++) {
+            File[] files = dir.listFiles((d, name) -> name.startsWith(filePrefix));
+            if (files != null && files.length > 0) {
+                System.out.println("Downloaded file found: " + files[0].getName());
+                return true;
+            }
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            }
         }
         System.out.println("No file with prefix '" + filePrefix + "' found in: " + directoryPath);
         return false;

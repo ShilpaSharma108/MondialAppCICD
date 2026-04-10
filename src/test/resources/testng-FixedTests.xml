@@ -10,33 +10,21 @@
     <parameter name="os" value="windows"/>
     <parameter name="headless" value="false"/>
 
-    <test name="ES Exchange Rate Source CRUD">
-        <classes>
-            <class name="com.mondial.tests.enterprise.ES_ExchangeRateSource_CRUD"/>
-        </classes>
-    </test>
-
     <test name="ES Get Exchange Rates">
         <classes>
             <class name="com.mondial.tests.enterprise.ES_GetExchangeRates"/>
         </classes>
     </test>
 
-    <test name="ES Sort Exchange Rates">
+    <test name="ES Users Error Messages">
         <classes>
-            <class name="com.mondial.tests.enterprise.ES_SortExchangeRates"/>
+            <class name="com.mondial.tests.enterprise.ES_Users_ErrorMessages"/>
         </classes>
     </test>
 
-    <test name="ES Exchange Verify CSV Upload Download">
+    <test name="V Verify Trial Balance All Txn Types">
         <classes>
-            <class name="com.mondial.tests.enterprise.ES_ExchangeVerifyCSVUploadDownload"/>
-        </classes>
-    </test>
-
-    <test name="ES Exchange Verify Unauthorised User Unable to Access">
-        <classes>
-            <class name="com.mondial.tests.enterprise.ES_Exchange_VerifyUnauthorisedUserUnabletoAccess"/>
+            <class name="com.mondial.tests.templated.report.V_VerifyTrialBalance_AllTxnTypes"/>
         </classes>
     </test>
 

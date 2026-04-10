@@ -52,9 +52,6 @@ public class UsersPage extends BasePage {
 	@FindBy(xpath = "//div[@class='alert alert-success']")
 	private WebElement successMessage;
 
-	@FindBy(xpath = "//i[@class='fa fa-remove ']")
-	private WebElement closeError;
-
 	private static final By FAILURE_MSG_BY = By.xpath("//div[@class='alert alert-danger']");
 
 	// Constructor
@@ -198,10 +195,7 @@ public class UsersPage extends BasePage {
 		WebElement msgEl = wait.until(
 				ExpectedConditions.refreshed(
 						ExpectedConditions.visibilityOfElementLocated(FAILURE_MSG_BY)));
-		String message = msgEl.getAttribute("innerText");
-		clickElement(closeError);
-		wait.until(ExpectedConditions.invisibilityOfElementLocated(FAILURE_MSG_BY));
-		return message;
+		return msgEl.getAttribute("innerText");
 	}
 
 	// ============================================

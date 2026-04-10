@@ -14,7 +14,6 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -510,23 +509,24 @@ public class ReportsPage extends BasePage {
 	}
 
 	public void checkTxnType(String txnType) {
-		Actions action = new Actions(driver);
 		List<WebElement> chkBx = driver
 				.findElements(By.xpath("//input[@type='checkbox'][contains(@name,'accounting')]"));
-		for (int i = 0; i <= chkBx.size() - 1; i++) {
-			if (chkBx.get(i).isSelected()) {
-				action.moveToElement(chkBx.get(i)).click().perform();
+		for (WebElement cb : chkBx) {
+			if (cb.isSelected()) {
+				jse.executeScript("arguments[0].scrollIntoView(true);", cb);
+				jse.executeScript("arguments[0].click();", cb);
 			}
 		}
 		waitForPageLoad();
-		for (int i = 0; i <= chkBx.size() - 1; i++) {
-			if (chkBx.get(i).getAttribute("name").contains(txnType))
-				action.moveToElement(chkBx.get(i)).click().perform();
+		for (WebElement cb : chkBx) {
+			if (cb.getAttribute("name").contains(txnType)) {
+				jse.executeScript("arguments[0].scrollIntoView(true);", cb);
+				jse.executeScript("arguments[0].click();", cb);
+			}
 		}
 	}
 
 	public void selectTxnType(String txnType) {
-		Actions action = new Actions(driver);
 		WebElement label;
 		if (txnType.equals("Source System"))
 			label = driver.findElement(
@@ -544,18 +544,20 @@ public class ReportsPage extends BasePage {
 			checkbox = driver.findElement(By.id(label.getAttribute("for")));
 		}
 
-		if (!checkbox.isSelected())
-			action.moveToElement(checkbox).click().perform();
+		if (!checkbox.isSelected()) {
+			jse.executeScript("arguments[0].scrollIntoView(true);", checkbox);
+			jse.executeScript("arguments[0].click();", checkbox);
+		}
 		waitForPageLoad();
 	}
 
 	public void deSelectTxnType() {
-		Actions action = new Actions(driver);
 		List<WebElement> chkBx = driver
 				.findElements(By.xpath("//input[@type='checkbox'][contains(@name,'accounting')]"));
-		for (int i = 0; i <= chkBx.size() - 1; i++) {
-			if (chkBx.get(i).isSelected()) {
-				action.moveToElement(chkBx.get(i)).click().perform();
+		for (WebElement cb : chkBx) {
+			if (cb.isSelected()) {
+				jse.executeScript("arguments[0].scrollIntoView(true);", cb);
+				jse.executeScript("arguments[0].click();", cb);
 			}
 		}
 	}
