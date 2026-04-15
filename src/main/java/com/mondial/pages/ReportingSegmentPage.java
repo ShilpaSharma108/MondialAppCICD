@@ -308,6 +308,17 @@ public class ReportingSegmentPage extends BasePage {
 	}
 
 	/**
+	 * Click the Options link for the first available segment in the table.
+	 * Safer alternative to clickSegmentOptions() when only one segment may exist.
+	 */
+	public void clickFirstAvailableSegmentOptions() {
+		WebElement optLink = wait.until(ExpectedConditions.elementToBeClickable(
+				By.xpath("//table[@class='table table-striped']//tbody//tr//td//a[@data-original-title='Options']")));
+		clickElement(optLink);
+		waitForPageLoad();
+	}
+
+	/**
 	 * Open Add GL Segment Option form and fill in details
 	 * Does NOT click Create - caller controls submit vs cancel
 	 * @param name - Option name

@@ -437,7 +437,8 @@ public class ReportsWriter extends BasePage {
 	 */
 	public boolean isBrowserAlertPresent() {
 		try {
-			wait.until(ExpectedConditions.alertIsPresent());
+			new org.openqa.selenium.support.ui.WebDriverWait(driver, java.time.Duration.ofSeconds(45))
+					.until(ExpectedConditions.alertIsPresent());
 			return true;
 		} catch (Exception e) {
 			return false;
@@ -450,7 +451,8 @@ public class ReportsWriter extends BasePage {
 	 */
 	public String getBrowserAlertTextAndDismiss() {
 		try {
-			wait.until(ExpectedConditions.alertIsPresent());
+			new org.openqa.selenium.support.ui.WebDriverWait(driver, java.time.Duration.ofSeconds(45))
+					.until(ExpectedConditions.alertIsPresent());
 			org.openqa.selenium.Alert alert = driver.switchTo().alert();
 			String text = alert.getText();
 			alert.accept();

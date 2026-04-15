@@ -82,6 +82,9 @@ public class RowFormat extends BasePage {
     @FindBy(xpath = "//div[@class='alert alert-success']")
     private WebElement successMessage;
 
+    @FindBy(xpath = "//a[contains(text(),'Download Table as CSV')]")
+    private WebElement downloadTable;
+
     // Constructor
     public RowFormat(WebDriver driver) {
         super(driver);
@@ -301,6 +304,48 @@ public class RowFormat extends BasePage {
                 "//div[@ref='eContainer'][@role='rowgroup']//div[@row-index]"
                 + "//div[contains(text(),'" + code + "')]"))
                 .size() > 0;
+    }
+
+    // ============================================
+    // CSV DOWNLOAD METHODS
+    // ============================================
+
+    /**
+     * Click the Download Table as CSV link on the Row Format edit page's AG Grid.
+     * Scrolls to the button first to ensure it is in view.
+     */
+    public void clickDownloadTable() {
+        scrollToElement(downloadTable);
+        clickElement(downloadTable);
+        waitForPageLoad();
+    }
+
+    /**
+     * Find a downloaded CSV file in the given directory whose name contains the specified keyword.
+     * Polls for up to 15 seconds because browser downloads are asynchronous.
+     * @param downloadDir - Directory to search in
+     * @param keyword - Substring the filename must contain (case-insensitive)
+     * @return Absolute path of the first matching file, or null if not found within 15 seconds
+     */
+    public String findDownloadedFile(String downloadDir, String keyword) {
+        java.io.File dir = new java.io.File(downloadDir);
+        int maxWaitSeconds = 15;
+        for (int i = 0; i < maxWaitSeconds; i++) {
+            java.io.File[] matches = dir.listFiles((d, name) ->
+                    name.toLowerCase().contains(keyword.toLowerCase()) && name.endsWith(".csv"));
+            if (matches != null && matches.length > 0) {
+                System.out.println("Found downloaded file: " + matches[0].getAbsolutePath());
+                return matches[0].getAbsolutePath();
+            }
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            }
+        }
+        System.out.println("No file containing '" + keyword + "' found in " + downloadDir);
+        return null;
     }
 
     /**

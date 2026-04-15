@@ -28,4 +28,10 @@
         </classes>
     </test>
 
+    <test name="CSV Download Upload Cross Page Tests">
+        <classes>
+            <class name="com.mondial.tests.csvdownloadupload.CSV_DownloadUploadCrossPageTest"/>
+        </classes>
+    </test>
+
 </suite>
